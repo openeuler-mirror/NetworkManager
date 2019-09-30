@@ -1,0 +1,57 @@
+From 06742d70c395be910894f116e9ef3d89d9b2da19 Mon Sep 17 00:00:00 2001
+From: peulerosci <zhangyao65@huawei.com>
+Date: Wed, 25 Sep 2019 17:41:10 +0800
+Subject: [PATCH] NetworkManager-tui: solve bond page problem when editing
+
+---
+ clients/tui/nmt-page-bond.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/clients/tui/nmt-page-bond.c b/clients/tui/nmt-page-bond.c
+index 1629c8b..0dc1b1d 100644
+--- a/clients/tui/nmt-page-bond.c
++++ b/clients/tui/nmt-page-bond.c
+@@ -226,6 +226,20 @@ WIDGET_CHANGED_FUNC (updelay, nmt_newt_entry_get_text, NM_SETTING_BOND_OPTION_UP
+ WIDGET_CHANGED_FUNC (downdelay, nmt_newt_entry_get_text, NM_SETTING_BOND_OPTION_DOWNDELAY)
+ WIDGET_CHANGED_FUNC (arp_interval, nmt_newt_entry_get_text, NM_SETTING_BOND_OPTION_ARP_INTERVAL)
+ 
++static void 
++refresh_page_option_by_mode(NmtPageBondPrivate *priv)
++{
++    const char *mode;
++    mode = nmt_newt_popup_get_active_id (priv->mode);
++        if (!strcmp (mode, "balance-tlb") || !strcmp (mode, "balance-alb")
++                || !strcmp (mode, "802.3ad")) {
++                nmt_newt_popup_set_active (priv->monitoring, NMT_PAGE_BOND_MONITORING_MII);
++                nmt_newt_component_set_sensitive (NMT_NEWT_COMPONENT (priv->monitoring), FALSE);
++        } else
++                nmt_newt_component_set_sensitive (NMT_NEWT_COMPONENT (priv->monitoring), TRUE);
++}
++
++
+ static void
+ mode_widget_changed (GObject    *object,
+                      GParamSpec *pspec,
+@@ -236,14 +250,17 @@ mode_widget_changed (GObject    *object,
+ 	const char *mode;
+ 
+ 	if (priv->updating)
+-		return;
++        {
++            refresh_page_option_by_mode(priv);
++            return;
++        }
+ 
+ 	mode = nmt_newt_popup_get_active_id (priv->mode);
+ 	priv->updating = TRUE;
+ 	nm_setting_bond_add_option (priv->s_bond, NM_SETTING_BOND_OPTION_MODE, mode);
+ 	priv->updating = FALSE;
+ 
+-	if (!strcmp (mode, "balance-tlb") || !strcmp (mode, "balance-alb")) {
++        if (!strcmp (mode, "balance-tlb") || !strcmp (mode, "balance-alb") || !strcmp (mode, "802.3ad")) {
+ 		nmt_newt_popup_set_active (priv->monitoring, NMT_PAGE_BOND_MONITORING_MII);
+ 		nmt_newt_component_set_sensitive (NMT_NEWT_COMPONENT (priv->monitoring), FALSE);
+ 	} else
+-- 
+1.8.3.1
+
