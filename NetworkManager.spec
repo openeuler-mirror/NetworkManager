@@ -45,7 +45,7 @@
 Name:             NetworkManager
 Version:          1.16.0
 Epoch:            1
-Release:          4
+Release:          5
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -60,9 +60,9 @@ Patch9003:        bugfix-NetworkManager-tui-solve-team-page-problem-when-use-jso
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
-BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel /usr/bin/valac polkit-devel
+BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel polkit-devel vala
 BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcurl-devel libndp-devel pygobject3-base teamd-devel
-BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel python-dbus
+BuildRequires:    ModemManager-glib-devel newt-devel python3 python3-dbus libselinux-devel dbus-x11 python2-dbus
 
 Requires(post):   systemd
 Requires(post):   /usr/sbin/update-alternatives
@@ -303,7 +303,7 @@ fi
 /usr/bin/udevadm control --reload-rules || :
 /usr/bin/udevadm trigger --subsystem-match=net || :
 
-%systemd_postun
+%systemd_postun NetworkManager.service NetworkManager-wait-online.service NetworkManager-dispatcher.service
 
 %ldconfig_scriptlets glib
 %ldconfig_scriptlets libnm
@@ -390,6 +390,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Oct 28 2019 caomeng <caomeng5@huawei.com> - 1.16.0-5
+- Type:NA
+- ID:NA
+- SUG:NA
+- DESC:add systemd_postun para
+
 * Fri Sep 27 2019 openEuler Buildteam <buildteam@openeuler.org> - 1.16.0-4
 - Type:bugfix
 - ID:NA
