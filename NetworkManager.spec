@@ -60,9 +60,9 @@ Patch9003:        bugfix-NetworkManager-tui-solve-team-page-problem-when-use-jso
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
-BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel polkit-devel vala
+BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel /usr/bin/valac polkit-devel
 BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcurl-devel libndp-devel pygobject3-base teamd-devel
-BuildRequires:    ModemManager-glib-devel newt-devel python3 python3-dbus libselinux-devel dbus-x11 python2-dbus
+BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel python-dbus
 
 Requires(post):   systemd
 Requires(post):   /usr/sbin/update-alternatives
