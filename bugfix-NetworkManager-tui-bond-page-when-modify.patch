@@ -1,5 +1,5 @@
 From 06742d70c395be910894f116e9ef3d89d9b2da19 Mon Sep 17 00:00:00 2001
-From: peulerosci <zhangyao65@huawei.com>
+From: zhangyao <zhangyao65@huawei.com>
 Date: Wed, 25 Sep 2019 17:41:10 +0800
 Subject: [PATCH] NetworkManager-tui: solve bond page problem when editing
 

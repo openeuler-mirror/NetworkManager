@@ -45,7 +45,7 @@
 Name:             NetworkManager
 Version:          1.16.0
 Epoch:            1
-Release:          5
+Release:          6
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -390,6 +390,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Dec 23 2019 openEuler Buildteam <buildteam@openeuler.org> - 1.16.0-6
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:modify the patches
+
 * Mon Oct 28 2019 caomeng <caomeng5@huawei.com> - 1.16.0-5
 - Type:NA
 - ID:NA
@@ -416,9 +422,4 @@ fi
 
 * Sat Sep 21 2019 openEuler Buildteam <buildteam@openeuler.org> - 1.16.0-1
 - Package init
-
-
-
-
-
 

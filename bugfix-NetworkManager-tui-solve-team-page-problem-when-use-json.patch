@@ -1,5 +1,5 @@
 From 4ad2335f5b798046e530fa1c670d0f0ffdea200a Mon Sep 17 00:00:00 2001
-From: peulerosci <zhangyao65@huawei.com>
+From: zhangyao <zhangyao65@huawei.com>
 Date: Wed, 25 Sep 2019 17:45:01 +0800
 Subject: [PATCH] NetworkManager-tui: solve team page problem when use json
 
