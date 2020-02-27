@@ -20,6 +20,7 @@
 %global snap %{?snapshot_dot}%{?git_sha_dot}
 %global real_version_major %(printf '%s' '%{real_version}' | sed -n 's/^\\([1-9][0-9]*\\.[1-9][0-9]*\\)\\.[1-9][0-9]*$/\\1/p')
 
+%bcond_with    python2
 %bcond_without adsl
 %bcond_without bluetooth
 %bcond_without wwan
@@ -45,7 +46,7 @@
 Name:             NetworkManager
 Version:          1.16.0
 Epoch:            1
-Release:          6
+Release:          7
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -61,8 +62,11 @@ Patch9003:        bugfix-NetworkManager-tui-solve-team-page-problem-when-use-jso
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
 BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel /usr/bin/valac polkit-devel
-BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcurl-devel libndp-devel pygobject3-base teamd-devel
-BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel python-dbus
+BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcurl-devel libndp-devel python3-gobject-base teamd-devel
+BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel
+%if %{with python2}
+BuildRequires:    python2 pygobject3-base python2-dbus
+%endif
 
 Requires(post):   systemd
 Requires(post):   /usr/sbin/update-alternatives
@@ -390,6 +394,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Feb 27 2020 openEuler Buildteam <buildteam@openeuler.org> - 1.16.0-7
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix build require of GObject introspection for python
+
 * Mon Dec 23 2019 openEuler Buildteam <buildteam@openeuler.org> - 1.16.0-6
 - Type:bugfix
 - ID:NA
