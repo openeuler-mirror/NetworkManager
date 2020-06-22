@@ -46,7 +46,7 @@
 Name:             NetworkManager
 Version:          1.16.0
 Epoch:            1
-Release:          7
+Release:          8
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -54,6 +54,7 @@ Source:           https://download.gnome.org/sources/NetworkManager/%{real_versi
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
+Patch0001:        Fix-errors-when-building-with-gtk-doc.patch
 Patch9000:        fix-wants-and-add-requires.patch
 Patch9001:        bugfix-NetworkManager-tui-solve-bond-module.patch       
 Patch9002:        bugfix-NetworkManager-tui-bond-page-when-modify.patch
@@ -394,6 +395,9 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Jun 22 2020 yanan li <liyanan032@huawei.com> - 1.16.0-8
+- Fix errors when building with gtk-doc.
+
 * Thu Feb 27 2020 openEuler Buildteam <buildteam@openeuler.org> - 1.16.0-7
 - Type:bugfix
 - ID:NA

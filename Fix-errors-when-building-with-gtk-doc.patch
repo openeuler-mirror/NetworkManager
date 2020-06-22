@@ -1,0 +1,82 @@
+From d5ed990caffecec6d1ba8f52c8c3319e1e994137 Mon Sep 17 00:00:00 2001
+From: Beniamino Galvani <bgalvani@redhat.com>
+Date: Tue, 3 Sep 2019 15:11:16 +0200
+Subject: [PATCH] build: fix errors when building with gtk-doc 1.32
+
+gtkdoc-scan 1.32 performs stricter checks on structures definitions
+and so it complains on:
+
+ /build/networkmanager/src/NetworkManager/libnm/./nm-vpn-plugin-old.h:0: warning: partial declaration (struct) : typedef struct {
+ 	NM_DEPRECATED_IN_1_2
+ 	GObject parent;
+ } NMVpnPluginOld NM_DEPRECATED_IN_1_2;
+
+because of the unrecognized token 'NM_DEPRECATED_IN_1_2'.
+
+Pass all allowed macros to gtkdoc-scan through the --ignore-decorators
+argument.
+
+https://gitlab.gnome.org/GNOME/gtk-doc/issues/98
+https://gitlab.freedesktop.org/NetworkManager/NetworkManager/issues/238
+(cherry picked from commit 2d941dc95a1d94d023ac8f98df2f344dbb1d223e)
+---
+ docs/libnm/Makefile.am | 4 +++-
+ docs/libnm/meson.build | 4 ++++
+ tools/decorators.sh    | 7 +++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
+ create mode 100755 tools/decorators.sh
+
+diff --git a/docs/libnm/Makefile.am b/docs/libnm/Makefile.am
+index 7aa9810e81..ded32f8218 100644
+--- a/docs/libnm/Makefile.am
++++ b/docs/libnm/Makefile.am
+@@ -18,8 +18,10 @@ DOC_SOURCE_DIR= \
+ 	$(top_srcdir)/libnm \
+ 	$(top_builddir)/libnm
+ 
++decorators := $(shell $(top_srcdir)/tools/decorators.sh $(top_srcdir)/libnm-core/nm-version.h)
++
+ # Extra options to supply to gtkdoc-scan.
+-SCAN_OPTIONS=--rebuild-types --rebuild-sections
++SCAN_OPTIONS=--rebuild-types --rebuild-sections --ignore-decorators "$(decorators)"
+ 
+ # Extra options to supply to gtkdoc-mkdb.
+ MKDB_OPTIONS=--sgml-mode --output-format=xml
+diff --git a/docs/libnm/meson.build b/docs/libnm/meson.build
+index c031a3176f..3403b339d7 100644
+--- a/docs/libnm/meson.build
++++ b/docs/libnm/meson.build
+@@ -32,6 +32,9 @@ configure_file(
+   configuration: version_conf,
+ )
+ 
++result = run_command(join_paths(meson.source_root(), 'tools', 'decorators.sh'),
++                     join_paths(meson.source_root(), 'libnm-core', 'nm-version.h'))
++
+ gnome.gtkdoc(
+   doc_module,
+   main_xml: doc_module + '-docs.xml',
+@@ -43,6 +46,7 @@ gnome.gtkdoc(
+   scan_args: [
+     '--rebuild-types',
+     '--rebuild-sections',
++    '--ignore-decorators=' + result.stdout().strip(),
+     '--ignore-headers=' + ' '.join(private_headers),
+   ],
+   scanobjs_args: '--type-init-func="g_type_init();"',
+diff --git a/tools/decorators.sh b/tools/decorators.sh
+new file mode 100755
+index 0000000000..7af7b1e494
+--- /dev/null
++++ b/tools/decorators.sh
+@@ -0,0 +1,7 @@
++#!/bin/sh
++
++# Extract NM_DEPRECATED_IN_* and NM_AVAILABLE_IN_* macros from a
++# header file and output them in a way suitable to be passed to
++# 'gtkdoc-scan --ignore-decorators'
++
++grep -o "NM_DEPRECATED_IN_[0-9]_[0-9]\+$\|NM_AVAILABLE_IN_[0-9]_[0-9]\+$" "$1" | sed ':a;N;$!ba;s/\n/|/g'
+-- 
+2.26.2
+
