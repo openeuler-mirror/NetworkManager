@@ -1,105 +1,89 @@
-From 600ac34d381425f715ceff4cbaead751fae69430 Mon Sep 17 00:00:00 2001
-From: zhangyao <zhangyao65@huawei.com>
-Date: Wed, 25 Sep 2019 17:33:40 +0800
-Subject: [PATCH] NetworkManager-tui: solve bond module
-
----
- .../libnm-core/nm-core-internal.h                  |  1 +
- NetworkManager-1.16.0/libnm-core/nm-setting-bond.c | 29 ++++++++++++++++++++--
- .../libnm-core/tests/test-setting.c                |  2 +-
- 3 files changed, 29 insertions(+), 3 deletions(-)
-
-diff --git NetworkManager-1.16.0/libnm-core/nm-core-internal.h NetworkManager-1.16.0/libnm-core/nm-core-internal.h
-index f2332f7..64d7f65 100644
---- NetworkManager-1.16.0/libnm-core/nm-core-internal.h
-+++ NetworkManager-1.16.0/libnm-core/nm-core-internal.h
-@@ -461,6 +461,7 @@ typedef enum {
+diff -Nur NetworkManager-1.20.10.org/libnm-core/nm-core-internal.h NetworkManager-1.20.10/libnm-core/nm-core-internal.h
+--- NetworkManager-1.20.10.org/libnm-core/nm-core-internal.h	2020-06-12 11:29:24.997178184 +0800
++++ NetworkManager-1.20.10/libnm-core/nm-core-internal.h	2020-06-12 14:14:02.965298351 +0800
+@@ -495,6 +495,7 @@
  	NM_BOND_OPTION_TYPE_IP,
  	NM_BOND_OPTION_TYPE_MAC,
  	NM_BOND_OPTION_TYPE_IFNAME,
-+        NM_BOND_OPTION_TYPE_PRIMARY_SLAVE,
++	NM_BOND_OPTION_TYPE_PRIMARY_SLAVE,
  } NMBondOptionType;
  
  NMBondOptionType
-diff --git NetworkManager-1.16.0/libnm-core/nm-setting-bond.c NetworkManager-1.16.0/libnm-core/nm-setting-bond.c
-index 51ce2de..5b60435 100644
---- NetworkManager-1.16.0/libnm-core/nm-setting-bond.c
-+++ NetworkManager-1.16.0/libnm-core/nm-setting-bond.c
-@@ -79,8 +79,8 @@ static const BondDefault defaults[] = {
+diff -Nur NetworkManager-1.20.10.org/libnm-core/nm-setting-bond.c NetworkManager-1.20.10/libnm-core/nm-setting-bond.c
+--- NetworkManager-1.20.10.org/libnm-core/nm-setting-bond.c	2020-06-12 11:29:24.997178184 +0800
++++ NetworkManager-1.20.10/libnm-core/nm-setting-bond.c	2020-06-12 14:19:44.310508536 +0800
+@@ -77,7 +77,7 @@
  	{ NM_SETTING_BOND_OPTION_ARP_IP_TARGET,    "",           NM_BOND_OPTION_TYPE_IP },
- 	{ NM_SETTING_BOND_OPTION_ARP_VALIDATE,     "none",       NM_BOND_OPTION_TYPE_BOTH, 0, 3,
- 	  { "none", "active", "backup", "all", NULL } },
+ 	{ NM_SETTING_BOND_OPTION_ARP_VALIDATE,     "none",       NM_BOND_OPTION_TYPE_BOTH, 0, 6,
+ 	  { "none", "active", "backup", "all", "filter", "filter_active", "filter_backup", NULL } },
 -	{ NM_SETTING_BOND_OPTION_PRIMARY,          "",           NM_BOND_OPTION_TYPE_IFNAME },
--	{ NM_SETTING_BOND_OPTION_PRIMARY_RESELECT, "always",     NM_BOND_OPTION_TYPE_BOTH, 0, 2,
 +	{ NM_SETTING_BOND_OPTION_PRIMARY,          "",           NM_BOND_OPTION_TYPE_PRIMARY_SLAVE },
-+        { NM_SETTING_BOND_OPTION_PRIMARY_RESELECT, "always",     NM_BOND_OPTION_TYPE_BOTH, 0, 2,
+ 	{ NM_SETTING_BOND_OPTION_PRIMARY_RESELECT, "always",     NM_BOND_OPTION_TYPE_BOTH, 0, 2,
  	  { "always", "better", "failure", NULL } },
  	{ NM_SETTING_BOND_OPTION_FAIL_OVER_MAC,    "none",       NM_BOND_OPTION_TYPE_BOTH, 0, 2,
- 	  { "none", "active", "follow", NULL } },
-@@ -234,7 +234,16 @@ validate_ip (const char *name, const char *value)
+@@ -232,7 +232,16 @@
  	}
  	return TRUE;
  }
 +static gboolean
 +nm_check_primary_slave (const char *value)
 +{
-+    if (!value || !value[0]) {
-+        return TRUE;
-+    }
-+
++	if (!value || !value[0]){
++		return TRUE;
++	}
  
-+    return nm_utils_is_valid_iface_name (value, NULL);
++
++	return nm_utils_is_valid_iface_name (value, NULL);
 +}
  static gboolean
  validate_ifname (const char *name, const char *value)
  {
-@@ -282,6 +291,8 @@ nm_setting_bond_validate_option (const char *name,
+@@ -280,6 +289,8 @@
  				return nm_utils_hwaddr_valid (value, ETH_ALEN);
  			case NM_BOND_OPTION_TYPE_IFNAME:
  				return validate_ifname (name, value);
-+                        case NM_BOND_OPTION_TYPE_PRIMARY_SLAVE:
-+                                return nm_check_primary_slave (value);
++			case NM_BOND_OPTION_TYPE_PRIMARY_SLAVE:
++				return nm_check_primary_slave (value);
  			}
  			return FALSE;
  		}
-@@ -335,6 +346,9 @@ nm_setting_bond_add_option (NMSettingBond *setting,
+@@ -333,6 +344,9 @@
                              const char *value)
  {
  	NMSettingBondPrivate *priv;
-+        const char *init_updelay = "0";
-+        const char *init_downdelay = "0";
-+        const char *tmp = NULL;
++	const char *init_updelay = "0";
++	const char *init_downdelay = "0";
++	const char *tmp = NULL;
  
  	g_return_val_if_fail (NM_IS_SETTING_BOND (setting), FALSE);
  
-@@ -350,11 +364,22 @@ nm_setting_bond_add_option (NMSettingBond *setting,
+@@ -348,11 +362,22 @@
  	    && strcmp (value, "0") != 0) {
  		g_hash_table_remove (priv->options, NM_SETTING_BOND_OPTION_ARP_INTERVAL);
  		g_hash_table_remove (priv->options, NM_SETTING_BOND_OPTION_ARP_IP_TARGET);
 +
-+                tmp = g_hash_table_lookup (NM_SETTING_BOND_GET_PRIVATE (setting)->options, NM_SETTING_BOND_OPTION_DOWNDELAY);
-+                if (!tmp) {
-+                        g_hash_table_insert (priv->options, g_strdup (NM_SETTING_BOND_OPTION_DOWNDELAY), g_strdup (init_downdelay));
-+                }
-+                tmp = g_hash_table_lookup (NM_SETTING_BOND_GET_PRIVATE (setting)->options, NM_SETTING_BOND_OPTION_UPDELAY);
-+                if (!tmp) {
-+                        g_hash_table_insert (priv->options, g_strdup (NM_SETTING_BOND_OPTION_UPDELAY), g_strdup (init_updelay));
-+                }
++		tmp = g_hash_table_lookup (NM_SETTING_BOND_GET_PRIVATE (setting)->options, NM_SETTING_BOND_OPTION_DOWNDELAY);
++		if(!tmp){
++			g_hash_table_insert (priv->options, g_strdup (NM_SETTING_BOND_OPTION_DOWNDELAY), g_strdup (init_downdelay));
++		}
++		tmp = g_hash_table_lookup (NM_SETTING_BOND_GET_PRIVATE (setting)->options,NM_SETTING_BOND_OPTION_UPDELAY);
++		if(!tmp){
++			g_hash_table_insert (priv->options, g_strdup (NM_SETTING_BOND_OPTION_UPDELAY),g_strdup (init_updelay));
++		}
  	} else if (   !strcmp (name, NM_SETTING_BOND_OPTION_ARP_INTERVAL)
  	           && strcmp (value, "0") != 0) {
  		g_hash_table_remove (priv->options, NM_SETTING_BOND_OPTION_MIIMON);
  		g_hash_table_remove (priv->options, NM_SETTING_BOND_OPTION_DOWNDELAY);
  		g_hash_table_remove (priv->options, NM_SETTING_BOND_OPTION_UPDELAY);
-+        } else if ( !strcmp (name, NM_SETTING_BOND_OPTION_PRIMARY) && !strcmp (value, "") ) {
-+                g_hash_table_remove (priv->options, NM_SETTING_BOND_OPTION_PRIMARY);
++	}else if( !strcmp (name, NM_SETTING_BOND_OPTION_PRIMARY) && !strcmp (value, "") ){
++		g_hash_table_remove (priv->options, NM_SETTING_BOND_OPTION_PRIMARY);
  	}
  
  	_notify (setting, PROP_OPTIONS);
-diff --git NetworkManager-1.16.0/libnm-core/tests/test-setting.c NetworkManager-1.16.0/libnm-core/tests/test-setting.c
-index 2011273..4c72d02 100644
---- NetworkManager-1.16.0/libnm-core/tests/test-setting.c
-+++ NetworkManager-1.16.0/libnm-core/tests/test-setting.c
-@@ -678,7 +678,7 @@ test_bond_normalize (void)
+diff -Nur NetworkManager-1.20.10.org/libnm-core/tests/test-setting.c NetworkManager-1.20.10/libnm-core/tests/test-setting.c
+--- NetworkManager-1.20.10.org/libnm-core/tests/test-setting.c	2020-06-12 11:29:24.993178124 +0800
++++ NetworkManager-1.20.10/libnm-core/tests/test-setting.c	2020-06-12 14:08:36.560383748 +0800
+@@ -688,7 +688,7 @@
  		((const char *[]){ "mode", "802.3ad", "ad_actor_system", "00:02:03:04:05:06", NULL }));
  	test_bond_normalize_options (
  		((const char *[]){ "mode", "1", "miimon", "1", NULL }),
@@ -108,6 +92,3 @@ index 2011273..4c72d02 100644
  	test_bond_normalize_options (
  		((const char *[]){ "mode", "balance-alb", "tlb_dynamic_lb", "1", NULL }),
  		((const char *[]){ "mode", "balance-alb", NULL }));
--- 
-1.8.3.1
-

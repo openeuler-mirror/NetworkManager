@@ -3,7 +3,7 @@
 %global wpa_supplicant_version 1:1.1
 %global ppp_version %(sed -n 's/^#define\\s*VERSION\\s*"\\([^\\s]*\\)"$/\\1/p' %{_includedir}/pppd/patchlevel.h 2>/dev/null | grep . || echo bad)
 %global glib2_version %(pkg-config --modversion glib-2.0 2>/dev/null || echo bad)
-%global real_version 1.16.0
+%global real_version 1.20.10
 %global snapshot %{nil}
 %global git_sha %{nil}
 %global obsoletes_device_plugins 1:0.9.9.95-1
@@ -44,9 +44,9 @@
 %global dhcp_default dhclient
 
 Name:             NetworkManager
-Version:          1.16.0
+Version:          1.20.10
 Epoch:            1
-Release:          8
+Release:          1
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -54,7 +54,6 @@ Source:           https://download.gnome.org/sources/NetworkManager/%{real_versi
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
-Patch0001:        Fix-errors-when-building-with-gtk-doc.patch
 Patch9000:        fix-wants-and-add-requires.patch
 Patch9001:        bugfix-NetworkManager-tui-solve-bond-module.patch       
 Patch9002:        bugfix-NetworkManager-tui-bond-page-when-modify.patch
@@ -395,6 +394,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Fri Jun 22 2020 zhujunhao <zhujunhao8@huawei.com> - 1.20.10-1
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:update to 1.20.10
+
 * Mon Jun 22 2020 yanan li <liyanan032@huawei.com> - 1.16.0-8
 - Fix errors when building with gtk-doc.
 
