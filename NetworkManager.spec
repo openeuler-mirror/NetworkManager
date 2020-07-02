@@ -46,7 +46,7 @@
 Name:             NetworkManager
 Version:          1.20.10
 Epoch:            1
-Release:          1
+Release:          2
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -57,7 +57,6 @@ Source2:          00-server.conf
 Patch9000:        fix-wants-and-add-requires.patch
 Patch9001:        bugfix-NetworkManager-tui-solve-bond-module.patch       
 Patch9002:        bugfix-NetworkManager-tui-bond-page-when-modify.patch
-Patch9003:        bugfix-NetworkManager-tui-solve-team-page-problem-when-use-json.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -394,6 +393,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Jul 2 2020 gaoxingwang <gxw94linux@163.com> - 1.20.10-2
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:delete a useless patch
+
 * Fri Jun 22 2020 zhujunhao <zhujunhao8@huawei.com> - 1.20.10-1
 - Type:bugfix
 - ID:NA
