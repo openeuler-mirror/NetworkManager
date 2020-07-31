@@ -3,7 +3,7 @@
 %global wpa_supplicant_version 1:1.1
 %global ppp_version %(sed -n 's/^#define\\s*VERSION\\s*"\\([^\\s]*\\)"$/\\1/p' %{_includedir}/pppd/patchlevel.h 2>/dev/null | grep . || echo bad)
 %global glib2_version %(pkg-config --modversion glib-2.0 2>/dev/null || echo bad)
-%global real_version 1.24.2
+%global real_version 1.26.0
 %global snapshot %{nil}
 %global git_sha %{nil}
 %global obsoletes_device_plugins 1:0.9.9.95-1
@@ -45,7 +45,7 @@
 %global dhcp_default dhclient
 
 Name:             NetworkManager
-Version:          1.24.2
+Version:          1.26.0
 Epoch:            1
 Release:          1
 Summary:          Network Link Manager and User Applications
@@ -56,7 +56,6 @@ Source1:          NetworkManager.conf
 Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
 Patch9000:        fix-wants-and-add-requires.patch
-Patch9002:        bugfix-NetworkManager-tui-bond-page-when-modify.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -407,8 +406,11 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Fri Jul 31 2020 zhujunhao <zhujunhao8@huawei.com> - 1.26.0-1
+- update to 1.26.0
+
 * Thu Jul 30 2020 zhujunhao <zhujunhao8@huawei.com> - 1.24.2-1
-- update t0 1.24.2
+- update to 1.24.2
 
 * Thu Jul 2 2020 gaoxingwang <gxw94linux@163.com> - 1.20.10-2
 - Type:bugfix
