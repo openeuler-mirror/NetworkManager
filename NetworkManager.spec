@@ -3,7 +3,7 @@
 %global wpa_supplicant_version 1:1.1
 %global ppp_version %(sed -n 's/^#define\\s*VERSION\\s*"\\([^\\s]*\\)"$/\\1/p' %{_includedir}/pppd/patchlevel.h 2>/dev/null | grep . || echo bad)
 %global glib2_version %(pkg-config --modversion glib-2.0 2>/dev/null || echo bad)
-%global real_version 1.20.10
+%global real_version 1.24.2
 %global snapshot %{nil}
 %global git_sha %{nil}
 %global obsoletes_device_plugins 1:0.9.9.95-1
@@ -37,6 +37,7 @@
 %bcond_with    sanitizer
 %bcond_with libnm_glib
 %bcond_without crypto_gnutls
+%bcond_without nm_cloud_setup
 
 %global dbus_version 1.1
 %global dbus_sys_dir %{_sysconfdir}/dbus-1/system.d
@@ -44,18 +45,17 @@
 %global dhcp_default dhclient
 
 Name:             NetworkManager
-Version:          1.20.10
+Version:          1.24.2
 Epoch:            1
-Release:          2
+Release:          1
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
-Source:           https://download.gnome.org/sources/NetworkManager/%{real_version_major}/%{name}-%{real_version}.tar.xz
+Source:           https://download.gnome.org/sources/NetworkManager/%{real_version_major}/%{name}-%{version}.tar.xz
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
 Patch9000:        fix-wants-and-add-requires.patch
-Patch9001:        bugfix-NetworkManager-tui-solve-bond-module.patch       
 Patch9002:        bugfix-NetworkManager-tui-bond-page-when-modify.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
@@ -148,7 +148,7 @@ ethernet devices with no carrier.
 %package_help
 
 %prep
-%autosetup -p1 -n NetworkManager-%{real_version}
+%autosetup -p1 -n NetworkManager-%{version}
 
 %build
 %if %{with regen_docs}
@@ -250,10 +250,16 @@ intltoolize --automake --copy --force
 	--with-config-logging-backend-default=journal \
 	--enable-json-validation \
 %if %{with libnm_glib}
-	--with-libnm-glib
+	--with-libnm-glib \
 %else
-	--without-libnm-glib
+	--without-libnm-glib \
 %endif
+%if %{with nm_cloud_setup}
+	--with-nm-cloud_setup=yes
+%else
+	--with-nm-cloud_setup=no
+%endif
+
 make
 
 %install
@@ -347,7 +353,7 @@ fi
 %{_sysconfdir}/%{name}/dispatcher.d/10-ifcfg-rh-routes.sh
 %{_sysconfdir}/%{name}/dispatcher.d/no-wait.d/10-ifcfg-rh-routes.sh
 %{_sysconfdir}/%{name}/dispatcher.d/pre-up.d/10-ifcfg-rh-routes.sh
-%{_libdir}/pppd/2.4.7/nm-pppd-plugin.so
+%{_libdir}/pppd/%{ppp_version}/nm-pppd-plugin.so
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-wifi.so
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-team.so
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-ovs.so
@@ -356,6 +362,14 @@ fi
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-bluetooth.so
 %{_bindir}/nmtui*
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-adsl.so
+%if %{with nm_cloud_setup}
+%{_libexecdir}/nm-cloud-setup
+%{systemd_dir}/nm-cloud-setup.service
+%{systemd_dir}/nm-cloud-setup.timer
+%{_prefix}/lib/%{name}/dispatcher.d/90-nm-cloud-setup.sh
+%{_prefix}/lib/%{name}/dispatcher.d/no-wait.d/90-nm-cloud-setup.sh
+%endif
+%{_prefix}/lib/firewalld/zones/nm-shared.xml
 
 %files wwan
 %defattr(-,root,root)
@@ -393,6 +407,9 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Jul 30 2020 zhujunhao <zhujunhao8@huawei.com> - 1.24.2-1
+- update t0 1.24.2
+
 * Thu Jul 2 2020 gaoxingwang <gxw94linux@163.com> - 1.20.10-2
 - Type:bugfix
 - ID:NA
