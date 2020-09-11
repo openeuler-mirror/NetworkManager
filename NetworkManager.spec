@@ -18,7 +18,7 @@
 %endif
 
 %global snap %{?snapshot_dot}%{?git_sha_dot}
-%global real_version_major %(printf '%s' '%{real_version}' | sed -n 's/^\\([1-9][0-9]*\\.[1-9][0-9]*\\)\\.[1-9][0-9]*$/\\1/p')
+%global real_version_major %(printf '%s' '%{real_version}' | sed -n 's/^\\([1-9][0-9]*\\.[1-9][0-9]*\\)\\.[0-9][0-9]*$/\\1/p')
 
 %bcond_with    python2
 %bcond_without adsl
@@ -47,7 +47,7 @@
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          1
+Release:          2
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -406,6 +406,9 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Sep 10 2020 hanzhijun <hanzhijun1@huawei.com> - 1.26.0-2
+- solve source url problem
+
 * Fri Jul 31 2020 zhujunhao <zhujunhao8@huawei.com> - 1.26.0-1
 - update to 1.26.0
 
