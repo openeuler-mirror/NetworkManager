@@ -47,7 +47,7 @@
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          2
+Release:          3
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -348,7 +348,7 @@ fi
 %dir %{_sysconfdir}/NetworkManager/dnsmasq-shared.d
 %dir %{_sysconfdir}/NetworkManager/system-connections
 %dir %{_sysconfdir}/sysconfig/network-scripts
-%{_sysconfdir}/NetworkManager/NetworkManager.conf
+%config(noreplace) %{_sysconfdir}/NetworkManager/NetworkManager.conf
 %dir %{_localstatedir}/lib/%{name}
 %{_sysconfdir}/%{name}/dispatcher.d/10-ifcfg-rh-routes.sh
 %{_sysconfdir}/%{name}/dispatcher.d/no-wait.d/10-ifcfg-rh-routes.sh
@@ -407,6 +407,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Sep 24 2020 zhouyihang <zhouyihang3@huawei.com> - 1.26.0-3
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:add attribute noreplace for NetworkManager.conf
+
 * Fri Sep 11 2020 yuboyun <yuboyun@huawei.com> - 1.26.0-2
 - Type:bugfix
 - ID:NA
