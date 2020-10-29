@@ -20,7 +20,6 @@
 %global snap %{?snapshot_dot}%{?git_sha_dot}
 %global real_version_major %(printf '%s' '%{real_version}' | sed -n 's/^\\([1-9][0-9]*\\.[1-9][0-9]*\\)\\.[0-9][0-9]*$/\\1/p')
 
-%bcond_with    python2
 %bcond_without adsl
 %bcond_without bluetooth
 %bcond_without wwan
@@ -47,7 +46,7 @@
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          4
+Release:          5
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -63,9 +62,6 @@ BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-
 BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel /usr/bin/valac polkit-devel
 BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcurl-devel libndp-devel python3-gobject-base teamd-devel
 BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel
-%if %{with python2}
-BuildRequires:    python2 pygobject3-base python2-dbus
-%endif
 
 Requires(post):   systemd
 Requires(post):   /usr/sbin/update-alternatives
@@ -407,6 +403,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Oct 29 2020 gaihuiying <gaihuiying1@huawei.com> - 1.26.0-5
+- Type:requirement
+- ID:NA
+- SUG:NA
+- DESC:don't support python2 anymore
+
 * Thu Sep 24 2020 zhouyihang <zhouyihang3@huawei.com> - 1.26.0-4
 - Type:bugfix
 - ID:NA
