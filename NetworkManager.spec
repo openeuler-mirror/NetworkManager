@@ -47,7 +47,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          1
+Release:          2
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -72,7 +72,7 @@ Requires(preun):  systemd
 Requires(preun):  /usr/sbin/update-alternatives
 Requires(postun): systemd
 Requires:         dbus  glib2 wpa_supplicant  bluez
-Requires:         %{name}-libnm = %{epoch}:%{version}-%{release}
+Requires:         %{name}-libnm = %{epoch}:%{version}-%{release} %{name}-help
 Obsoletes:        NetworkManager < %{obsoletes_device_plugins} NetworkManager < %{obsoletes_ppp_plugin}
 Obsoletes:        dhcdbd NetworkManager < 1.0.0
 Obsoletes:        NetworkManager-wimax < 1.2
@@ -406,6 +406,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Nov 09 2020 xihaochen <xihaochen@huawei.com> - 1.26.2-2
+- Type:requirement
+- CVE:NA
+- SUG:NA
+- DESC:add NetworkManager-help dependency for Networkmanager
+
 * Thu Aug 27 2020 yuboyun <yuboyun@huawei.com> - 1.26.2-1
 - update to 1.26.2
 
