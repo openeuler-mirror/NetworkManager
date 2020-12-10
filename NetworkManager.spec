@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          3
+Release:          4
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -56,7 +56,8 @@ Source:           https://download.gnome.org/sources/NetworkManager/%{real_versi
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
-Patch9000:        fix-wants-and-add-requires.patch
+Patch1:           fix-wants-and-add-requires.patch
+Patch2:           bugfix-NetworkManager-restarting-service-on-dependency-failure.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -427,6 +428,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Dec 10 2020 yuboyun <yuboyun@huawei.com> - 1.26.2-4
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix NetworkManager restarting service on dependency failure
+
 * Wed Nov 25 2020 gaihuiying <gaihuiying1@huawei.com> - 1.26.2-3
 - Type:bugfix
 - CVE:NA
