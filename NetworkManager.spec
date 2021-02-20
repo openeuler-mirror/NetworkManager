@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          4
+Release:          5
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -270,7 +270,7 @@ intltoolize --automake --copy --force
 	--with-nm-cloud_setup=no
 %endif
 
-make
+make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
@@ -423,7 +423,13 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
-* Fri May 14 2021 gaihuiying <gaihuiying1@huawei.com> - 1.26.2-4
+* Fri Mar 12 2021 yanan <yanan@huawei.com> - 1.26.2-5
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:use multi thread to build
+
+* Thu Dec 10 2020 yuboyun <yuboyun@huawei.com> - 1.26.2-4
 - Type:bugfix
 - CVE:NA
 - SUG:NA
