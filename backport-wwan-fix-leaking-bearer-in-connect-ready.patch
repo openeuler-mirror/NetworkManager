@@ -1,0 +1,38 @@
+From 5747bdb8b851a5c27868d4175b865a915d12549a Mon Sep 17 00:00:00 2001
+From: Thomas Haller <thaller@redhat.com>
+Date: Tue, 23 Feb 2021 07:15:40 +0100
+Subject: [PATCH] wwan: fix leaking "bearer" in connect_ready()
+
+Fixes: 105ee6e5a9aa ('device: fix crash by handling connection cancellation')
+
+https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/issues/669
+
+reason:fix leaking "bearer" in connect_ready()
+
+Conflict:NA
+Reference:https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/commit/5747bdb8b851a5c27868d4175b865a915d12549a
+---
+ src/devices/wwan/nm-modem-broadband.c | 4 +++++-----
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff -Naur a/src/devices/wwan/nm-modem-broadband.c b/src/devices/wwan/nm-modem-broadband.c
+--- a/src/devices/wwan/nm-modem-broadband.c	2021-02-23 15:43:39.748000000 +0800
++++ b/src/devices/wwan/nm-modem-broadband.c	2021-02-23 15:46:28.946000000 +0800
+@@ -359,7 +359,7 @@
+ 	GError *error = NULL;
+ 	NMModemIPMethod ip4_method = NM_MODEM_IP_METHOD_UNKNOWN;
+ 	NMModemIPMethod ip6_method = NM_MODEM_IP_METHOD_UNKNOWN;
+-	MMBearer *bearer;
++	gs_unref_object MMBearer *bearer = NULL;
+ 
+ 	bearer = mm_modem_simple_connect_finish (simple_iface, res, &error);
+ 
+@@ -373,7 +373,7 @@
+ 	if (!ctx)
+ 		return;
+ 
+-	self->_priv.bearer = bearer;
++	self->_priv.bearer = g_steal_pointer(&bearer);
+ 
+ 	if (!self->_priv.bearer) {
+ 		if (g_error_matches (error, MM_MOBILE_EQUIPMENT_ERROR, MM_MOBILE_EQUIPMENT_ERROR_SIM_PIN) ||
