@@ -38,6 +38,7 @@
 %bcond_with libnm_glib
 %bcond_without crypto_gnutls
 %bcond_without nm_cloud_setup
+%bcond_with    firewalld_zone
 
 %global dbus_version 1.1
 %global dbus_sys_dir %{_sysconfdir}/dbus-1/system.d
@@ -47,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          3
+Release:          4
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -65,6 +66,10 @@ BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcur
 BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel
 %if %{with python2}
 BuildRequires:    python2 pygobject3-base python2-dbus
+%endif
+
+%if %{with firewalld_zone}
+BuildRequires:    firewalld-filesystem
 %endif
 
 Requires(post):   systemd
@@ -244,6 +249,11 @@ intltoolize --automake --copy --force
 	--with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
 	--enable-ppp=yes \
 %endif
+%if %{with firewalld_zone}
+	--enable-firewalld-zone \
+%else
+	--disable-firewalld-zone \
+%endif
 	--with-dist-version=%{version}-%{release} \
 	--with-config-plugins-default='ifcfg-rh' \
 	--with-config-dns-rc-manager-default=symlink \
@@ -312,6 +322,10 @@ fi
 /usr/bin/udevadm control --reload-rules || :
 /usr/bin/udevadm trigger --subsystem-match=net || :
 
+%if %{with firewalld_zone}
+%firewalld_reload
+%endif
+
 %systemd_postun NetworkManager.service NetworkManager-wait-online.service NetworkManager-dispatcher.service
 
 %ldconfig_scriptlets glib
@@ -369,7 +383,9 @@ fi
 %{_prefix}/lib/%{name}/dispatcher.d/90-nm-cloud-setup.sh
 %{_prefix}/lib/%{name}/dispatcher.d/no-wait.d/90-nm-cloud-setup.sh
 %endif
+%if %{with firewalld_zone}
 %{_prefix}/lib/firewalld/zones/nm-shared.xml
+%endif
 
 %files wwan
 %defattr(-,root,root)
@@ -407,6 +423,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Fri May 14 2021 gaihuiying <gaihuiying1@huawei.com> - 1.26.2-4
+- Type:bugfix
+- CVE:NA
+- SUG:NA
+- DESC:add macro firewalld_zone to fix firewalld error about nm-shared.xml
+
 * Thu Dec 10 2020 yuboyun <yuboyun@huawei.com> - 1.26.2-3
 - Type:bugfix
 - ID:NA
