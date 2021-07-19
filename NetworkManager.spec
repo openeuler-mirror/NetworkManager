@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          5
+Release:          6
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -58,6 +58,9 @@ Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
 Patch1:        fix-wants-and-add-requires.patch
 Patch2:        bugfix-NetworkManager-restarting-service-on-dependency-failure.patch
+
+# amend translation of nmcli
+Patch3:        amend-edit-translation-of-nmcli.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -423,6 +426,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Jul  8 2021 wangce <wangce@uniontech.com> - 1.26.2-6
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:amend edit translation of nmcli
+
 * Fri Mar 12 2021 yanan <yanan@huawei.com> - 1.26.2-5
 - Type:bugfix
 - ID:NA
