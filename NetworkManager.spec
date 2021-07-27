@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          4
+Release:          5
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -58,6 +58,7 @@ Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
 Patch1:           fix-wants-and-add-requires.patch
 Patch2:		  bugfix-NetworkManager-restarting-service-on-dependency-failure.patch
+Patch3:           bugfix-nmcli-field-active-show-error.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -423,6 +424,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Tue Jul 27 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.2-5
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix 'nmcli -f NAME,ACTIVE',active column display error
+
 * Fri May 14 2021 gaihuiying <gaihuiying1@huawei.com> - 1.26.2-4
 - Type:bugfix
 - CVE:NA
