@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          5
+Release:          6
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -423,6 +423,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Fri Jul 30 2021 jiazhenyuan <jiazhenyuan@uniontech.com> - 1.26.2-6
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix dbus-daemon error when systemd-resolved service was not enabled
+
 * Fri Mar 12 2021 yanan <yanan@huawei.com> - 1.26.2-5
 - Type:bugfix
 - ID:NA
