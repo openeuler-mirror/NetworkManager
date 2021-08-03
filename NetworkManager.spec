@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          7
+Release:          8
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -58,9 +58,9 @@ Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
 Patch1:        fix-wants-and-add-requires.patch
 Patch2:        bugfix-NetworkManager-restarting-service-on-dependency-failure.patch
-
 # amend translation of nmcli
 Patch3:        amend-edit-translation-of-nmcli.patch
+Patch4:        backport-device-fix-wrongly-considering-ipv6-may-fail-for-ipv4.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -426,6 +426,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Tue Aug 3 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.2-8
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:sync from upstream, fix wrongly considering ipv6.may-fail for ipv4
+
 * Fri Jul 30 2021 jiazhenyuan <jiazhenyuan@uniontech.com> - 1.26.2-7
 - Type:bugfix
 - ID:NA
