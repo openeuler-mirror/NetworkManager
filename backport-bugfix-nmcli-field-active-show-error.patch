@@ -1,0 +1,11 @@
+diff -urN NetworkManager-1.26.2/clients/cli/connections.c NetworkManager-1.26.2-bugfix/clients/cli/connections.c
+--- NetworkManager-1.26.2/clients/cli/connections.c	2020-08-19 15:39:11.000000000 +0800
++++ NetworkManager-1.26.2-bugfix/clients/cli/connections.c	2021-07-07 17:14:11.293096678 +0800
+@@ -2107,6 +2107,7 @@
+ 
+ 				if (NM_IN_SET (info->info_type, NMC_GENERIC_INFO_TYPE_CON_SHOW_DEVICE,
+ 				                                NMC_GENERIC_INFO_TYPE_CON_SHOW_STATE,
++								NMC_GENERIC_INFO_TYPE_CON_SHOW_ACTIVE,
+ 				                                NMC_GENERIC_INFO_TYPE_CON_SHOW_ACTIVE_PATH)) {
+ 					show_active_fields = TRUE;
+ 					break;
