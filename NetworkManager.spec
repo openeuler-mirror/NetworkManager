@@ -46,7 +46,7 @@
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          7
+Release:          8
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -323,7 +323,7 @@ fi
 %{_bindir}/nmcli
 %{_bindir}/nm-online
 %{_sbindir}/NetworkManager
-%exclude %{_libexecdir}/nm-initrd-generator
+%{_libexecdir}/nm-initrd-generator
 %ghost %attr(755, root, root) %{_sbindir}/ifdown
 %ghost %attr(755, root, root) %{_sbindir}/ifup
 %dir %{_prefix}/lib/NetworkManager/conf.d
@@ -405,6 +405,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Sep 2 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.0-8
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:provide nm-initrd-generator to dracut
+
 * Fri Jul 30 2021 jiazhenyuan <jiazhenyuan@uniontech.com> - 1.26.0-7
 - Type:bugfix
 - ID:NA
