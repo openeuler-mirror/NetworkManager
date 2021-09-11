@@ -46,7 +46,7 @@
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          7
+Release:          8
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -63,7 +63,7 @@ BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
 BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel /usr/bin/valac polkit-devel
 BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcurl-devel libndp-devel python3-gobject-base teamd-devel
-BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel
+BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel chrpath
 
 Requires(post):   systemd
 Requires(post):   /usr/sbin/update-alternatives
@@ -269,6 +269,9 @@ ln -s ../no-wait.d/10-ifcfg-rh-routes.sh %{buildroot}%{_sysconfdir}/%{name}/disp
 ln -s ../10-ifcfg-rh-routes.sh %{buildroot}%{_sysconfdir}/%{name}/dispatcher.d/no-wait.d/
 
 %find_lang %{name}
+chrpath -d %{buildroot}/%{_libdir}/%{name}/%{version}-%{release}/*.so*
+mkdir -p %{buildroot}/etc/ld.so.conf.d
+echo "%{_libdir}/%{name}/%{version}-%{release}" > %{buildroot}/etc/ld.so.conf.d/%{name}-%{_arch}.conf
 
 %delete_la_and_a
 find %{buildroot}%{_datadir}/gtk-doc -exec touch --reference configure.ac '{}' \+
@@ -298,6 +301,7 @@ else
    /usr/sbin/update-alternatives --install %{_sbindir}/ifup ifup %{_libexecdir}/nm-ifup 50 \
         --slave %{_sbindir}/ifdown ifdown %{_libexecdir}/nm-ifdown
 fi
+/sbin/ldconfig
 
 %preun
 if [ $1 -eq 0 ]; then
@@ -314,6 +318,7 @@ fi
 
 %ldconfig_scriptlets glib
 %ldconfig_scriptlets libnm
+/sbin/ldconfig
 
 %files
 %defattr(-,root,root)
@@ -368,6 +373,7 @@ fi
 %{_prefix}/lib/%{name}/dispatcher.d/no-wait.d/90-nm-cloud-setup.sh
 %endif
 %{_prefix}/lib/firewalld/zones/nm-shared.xml
+%config(noreplace) /etc/ld.so.conf.d/*
 
 %files wwan
 %defattr(-,root,root)
@@ -405,6 +411,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Sat Sep 11 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.0-8
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:remove rpath
+
 * Fri Jul 30 2021 jiazhenyuan <jiazhenyuan@uniontech.com> - 1.26.0-7
 - Type:bugfix
 - ID:NA
