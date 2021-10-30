@@ -40,13 +40,17 @@
 
 %global dbus_version 1.1
 %global dbus_sys_dir %{_sysconfdir}/dbus-1/system.d
+%if %{with bluetooth} || %{with wwan}
 %global with_modem_manager_1 1
+%else
+%global with_modem_manager_1 0
+%endif
 %global dhcp_default dhclient
 
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          8
+Release:          9
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -62,15 +66,18 @@ Patch5:           backport-wwan-fix-leaking-bearer-in-connect-ready.patch
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
 BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel /usr/bin/valac polkit-devel
-BuildRequires:    iptables libxslt bluez-libs-devel systemd systemd-devel libcurl-devel libndp-devel python3-gobject-base teamd-devel
+BuildRequires:    iptables libxslt systemd systemd-devel libcurl-devel libndp-devel python3-gobject-base teamd-devel
 BuildRequires:    ModemManager-glib-devel newt-devel /usr/bin/dbus-launch python3 python3-dbus libselinux-devel chrpath
 
+%if %{with bluetooth}
+BuildRequires:    bluez-libs-devel
+%endif
 Requires(post):   systemd
 Requires(post):   /usr/sbin/update-alternatives
 Requires(preun):  systemd
 Requires(preun):  /usr/sbin/update-alternatives
 Requires(postun): systemd
-Requires:         dbus  glib2 wpa_supplicant  bluez
+Requires:         dbus  glib2
 Requires:         %{name}-libnm = %{epoch}:%{version}-%{release}
 Obsoletes:        NetworkManager < %{obsoletes_device_plugins} NetworkManager < %{obsoletes_ppp_plugin}
 Obsoletes:        dhcdbd NetworkManager < 1.0.0
@@ -107,6 +114,19 @@ using DHCP, NetworkManager is intended to replace default routes,
 obtain IP addresses from a DHCP server, and change name servers
 whenever it sees fit.
 
+	
+%if %{with wifi}
+%package wifi
+Summary:          Wifi plugin for NetworkManager
+Requires:         %{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:         wpa_supplicant
+
+Obsoletes: NetworkManager < %{obsoletes_device_plugins}
+
+%description wifi
+This package contains NetworkManager support for Wifi devices.
+%endif
+
 %package          wwan
 Summary:          Mobile broadband device plugin for %{name}
 Requires:         %{name} = %{epoch}:%{version}-%{release}
@@ -116,6 +136,38 @@ Obsoletes:        NetworkManager < %{obsoletes_device_plugins}
 %description      wwan
 This package contains NetworkManager support for mobile broadband (WWAN)
 devices.
+
+%if %{with bluetooth}
+%package          bluetooth
+Summary:          Bluetooth device plugin for %{name}
+Requires:         %{name} = %{epoch}:%{version}-%{release}
+Requires:         NetworkManager-wwan
+Requires:         bluez
+Obsoletes:        NetworkManager < %{obsoletes_device_plugins}
+
+%description      bluetooth
+This package contains NetworkManager support for Bluetooth device
+%endif
+
+%if %{with ovs}
+%package ovs
+Summary:         Open vSwitch device plugin for NetworkManager
+Requires:        %{name} = %{epoch}:%{version}-%{release}
+ 
+%description ovs
+This package contains NetworkManager support for Open vSwitch bridges.
+%endif
+
+	
+%if %{with ppp}
+%package ppp
+Summary:         PPP plugin for NetworkManager
+Requires:        %{name} = %{epoch}:%{version}-%{release}
+Obsoletes:       NetworkManager < %{obsoletes_ppp_plugin}
+ 
+%description ppp
+This package contains NetworkManager support for PPP.
+%endif
 
 %package          libnm
 Summary:          Libraries for adding NetworkManager support to applications (new API).
@@ -357,12 +409,7 @@ fi
 %{_sysconfdir}/%{name}/dispatcher.d/no-wait.d/10-ifcfg-rh-routes.sh
 %{_sysconfdir}/%{name}/dispatcher.d/pre-up.d/10-ifcfg-rh-routes.sh
 %{_libdir}/pppd/%{ppp_version}/nm-pppd-plugin.so
-%{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-wifi.so
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-team.so
-%{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-ovs.so
-%{systemd_dir}/NetworkManager.service.d/NetworkManager-ovs.conf
-%{_libdir}/%{name}/%{version}-%{release}/libnm-ppp-plugin.so
-%{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-bluetooth.so
 %{_bindir}/nmtui*
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-adsl.so
 %if %{with nm_cloud_setup}
@@ -380,6 +427,30 @@ fi
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-wwan.so
 %{_libdir}/%{name}/%{version}-%{release}/libnm-wwan.so
 
+%if %{with bluetooth}
+%files bluetooth
+%defattr(-,root,root)
+%{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-bluetooth.so
+%endif
+
+%if %{with wifi}
+%files wifi
+%defattr(-,root,root)
+%{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-wifi.so
+%endif
+
+%if %{with ovs}
+%files ovs
+%defattr(-,root,root)
+%{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-ovs.so
+%{systemd_dir}/NetworkManager.service.d/NetworkManager-ovs.conf
+%endif
+
+%if %{with ppp}
+%files ppp
+%defattr(-,root,root)
+%{_libdir}/%{name}/%{version}-%{release}/libnm-ppp-plugin.so
+%endif
 %files libnm -f %{name}.lang
 %defattr(-,root,root)
 %{_libdir}/libnm.so.0*
@@ -411,6 +482,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Sat Oct 29 2021 zhongxuan2 <zhongxuan2@huawei.com> - 1.26.0-9
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:decoupling bluetooth,wifi,ovs,ppp module
+
 * Sat Sep 11 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.0-8
 - Type:bugfix
 - ID:NA
