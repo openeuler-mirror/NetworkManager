@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          10
+Release:          11
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -62,6 +62,7 @@ Patch2:        bugfix-NetworkManager-restarting-service-on-dependency-failure.pa
 Patch3:        amend-edit-translation-of-nmcli.patch
 Patch4:        backport-device-fix-wrongly-considering-ipv6-may-fail-for-ipv4.patch
 Patch5:        backport-bugfix-nmcli-field-active-show-error.patch
+Patch6:        backport-libnm-fix-leak-and-return-failures-from-nm-client-load-connections.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -432,7 +433,13 @@ fi
 %{_datadir}/gtk-doc/html/libnm/*
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
-%changelog
+%changelog 
+* Sun Nov 7 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.2-11
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:libnm: fix leak and return "failures" from nm_client_load_connections
+
 * Thu Oct 21 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.2-10
 - Type:bugfix
 - ID:NA
