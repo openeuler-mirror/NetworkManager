@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          7
+Release:          8
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -63,6 +63,7 @@ Patch2:           bugfix-NetworkManager-restarting-service-on-dependency-failure
 Patch3:           backport-device-fix-wrongly-considering-ipv6.may-fail-for-ipv4.patch
 Patch4:           backport-iwd-Disconnect-signals-in-NMDeviceIwd-s-dispose.patch
 Patch5:           backport-wwan-fix-leaking-bearer-in-connect-ready.patch
+Patch6:           backport-iwd-Fix-a-use-after-free.patch
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
 BuildRequires:    dhclient readline-devel audit-libs-devel gtk-doc libudev-devel libuuid-devel /usr/bin/valac polkit-devel
@@ -476,13 +477,19 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Nov 11 2021 zengweifeng<zwfeng@huawei.com> - 1.26.0-8
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC: fix use after free
+
 * Sat Oct 30 2021 zhongxuan2<zhongxuan2@huawei.com> - 1.26.0-7
 - Type:bugfix
 - ID:NA
 - SUG:NA
 - DESC: decoupling bluetooth,wifi,ovs,ppp module
 
-* Thu Apr 29 2021 zengwefeng<zwfeng@huawei.com> - 1.26.0-6
+* Thu Apr 29 2021 zengweifeng<zwfeng@huawei.com> - 1.26.0-6
 - Type:bugfix
 - ID:NA
 - SUG:NA
