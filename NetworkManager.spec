@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.26.0
 Epoch:            1
-Release:          11
+Release:          12
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -94,15 +94,11 @@ Obsoletes:        %{name}-dispatcher-routing-rules
 Provides:         %{name}-config-routing-rules = %{epoch}:%{version}-%{release}
 Obsoletes:        %{name}-config-routing-rules < %{epoch}:%{version}-%{release}
 Provides:         %{name}-ppp
-Obsoletes:        %{name}-ppp
 Provides:         %{name}-wifi
-Obsoletes:        %{name}-wifi
 Provides:         %{name}-team
 Obsoletes:        %{name}-team
 Provides:         %{name}-ovs
-Obsoletes:        %{name}-ovs
 Provides:         %{name}-bluetooth
-Obsoletes:        %{name}-bluetooth
 Provides:         %{name}-tui
 Obsoletes:        %{name}-tui
 Provides:         %{name}-adsl
@@ -484,6 +480,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Wed Nov 17 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.0-12
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix bluetooth,wifi,ovs,ppp module install problem
+
 * Thu Nov 11 2021 zengweifeng <zwfeng@huawei.com> - 1.26.0-11
 - Type:bugfix
 - ID:NA
