@@ -3,7 +3,7 @@
 %global wpa_supplicant_version 1:1.1
 %global ppp_version %(sed -n 's/^#define\\s*VERSION\\s*"\\([^\\s]*\\)"$/\\1/p' %{_includedir}/pppd/patchlevel.h 2>/dev/null | grep . || echo bad)
 %global glib2_version %(pkg-config --modversion glib-2.0 2>/dev/null || echo bad)
-%global real_version 1.26.0
+%global real_version 1.26.2
 %global snapshot %{nil}
 %global git_sha %{nil}
 %global obsoletes_device_plugins 1:0.9.9.95-1
@@ -45,9 +45,9 @@
 %global dhcp_default dhclient
 
 Name:             NetworkManager
-Version:          1.26.0
+Version:          1.26.2
 Epoch:            1
-Release:          4
+Release:          1
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -412,6 +412,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Sat Nov 27 2021 gaoxingwang <gxw94linux@163.com> - 1.26.2-1
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:update NetworkManager to 1.26.2
+
 * Thu May 06 2021 wangxiaopeng<wangxp006@163.com> - 1.26.0-4
 - Type:bugfix
 - ID:NA
