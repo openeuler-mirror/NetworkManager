@@ -1,0 +1,36 @@
+From e1424f264d22e0b73a11a40139818bc1c4f752eb Mon Sep 17 00:00:00 2001
+From: Thomas Haller <thaller@redhat.com>
+Date: Fri, 6 Nov 2020 18:53:57 +0100
+Subject: [PATCH] core/ovs: fix leak of "NMOvsdbPrivate.db_uuid
+
+Also, never update the value to %NULL. If the current
+message does not contain a UUID, keep the previous one.
+
+Fixes: 830a5a14cb29 ('device: add support for OpenVSwitch devices')
+(cherry picked from commit 609b08e2eb6a10ca1ca87725207eafa5ac4f4b83)
+(cherry picked from commit 0464c36a0217ca1977b73078b824be86e05cfc48)
+---
+ src/devices/ovs/nm-ovsdb.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/devices/ovs/nm-ovsdb.c b/src/devices/ovs/nm-ovsdb.c
+index 0b3fa3fdb5..a4d38397b2 100644
+--- a/src/devices/ovs/nm-ovsdb.c
++++ b/src/devices/ovs/nm-ovsdb.c
+@@ -1021,8 +1021,12 @@ ovsdb_got_update (NMOvsdb *self, json_t *msg)
+ 	}
+ 
+ 	if (ovs) {
++		const char *s;
++
+ 		iter = json_object_iter (ovs);
+-		priv->db_uuid = iter ? g_strdup (json_object_iter_key (iter)) : NULL;
++		s = json_object_iter_key (iter);
++		if (s)
++			nm_utils_strdup_reset (&priv->db_uuid, s);
+ 	}
+ 
+ 	/* Interfaces */
+-- 
+GitLab
+
