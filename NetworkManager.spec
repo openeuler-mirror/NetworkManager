@@ -3,7 +3,7 @@
 %global wpa_supplicant_version 1:1.1
 %global ppp_version %(sed -n 's/^#define\\s*VERSION\\s*"\\([^\\s]*\\)"$/\\1/p' %{_includedir}/pppd/patchlevel.h 2>/dev/null | grep . || echo bad)
 %global glib2_version %(pkg-config --modversion glib-2.0 2>/dev/null || echo bad)
-%global real_version 1.26.0
+%global real_version 1.32.12
 %global snapshot %{nil}
 %global git_sha %{nil}
 %global obsoletes_device_plugins 1:0.9.9.95-1
@@ -48,22 +48,15 @@
 %global dhcp_default dhclient
 
 Name:             NetworkManager
-Version:          1.26.0
+Version:          1.32.12
 Epoch:            1
-Release:          11
+Release:          1
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
 Source:           https://download.gnome.org/sources/NetworkManager/%{real_version_major}/%{name}-%{version}.tar.xz
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
-# PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
-Patch1:           fix-wants-and-add-requires.patch
-Patch2:           bugfix-NetworkManager-restarting-service-on-dependency-failure.patch
-Patch3:           backport-device-fix-wrongly-considering-ipv6.may-fail-for-ipv4.patch
-Patch4:           backport-iwd-Disconnect-signals-in-NMDeviceIwd-s-dispose.patch
-Patch5:           backport-wwan-fix-leaking-bearer-in-connect-ready.patch
-Patch6:           backport-iwd-Fix-a-use-after-free.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -378,7 +371,7 @@ fi
 %{_bindir}/nmcli
 %{_bindir}/nm-online
 %{_sbindir}/NetworkManager
-%exclude %{_libexecdir}/nm-initrd-generator
+%{_libexecdir}/nm-initrd-generator
 %ghost %attr(755, root, root) %{_sbindir}/ifdown
 %ghost %attr(755, root, root) %{_sbindir}/ifup
 %dir %{_prefix}/lib/NetworkManager/conf.d
@@ -390,6 +383,7 @@ fi
 %{_libdir}/%{name}/%{version}-%{release}/*.so
 %{_libexecdir}/nm-if*
 %{_libexecdir}/nm-dhcp-helper
+%{_libexecdir}/nm-daemon-helper
 %{_libexecdir}/nm-dispatcher
 %{_datadir}/bash-completion/completions/nmcli
 %{dbus_sys_dir}/*.conf
@@ -468,7 +462,7 @@ fi
 
 %files help
 %defattr(-,root,root)
-%doc CONTRIBUTING NEWS README TODO
+%doc CONTRIBUTING.md NEWS README TODO
 %{_mandir}/man1/nmcli.1.gz
 %{_mandir}/man1/nm-online.1.gz
 %{_mandir}/man5/*.5.gz
@@ -480,6 +474,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Tue Dec 14 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-1
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:update NetworkManager to 1.32.12 
+
 * Thu Nov 18 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.0-11
 - Type:bugfix
 - ID:NA
