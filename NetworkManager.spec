@@ -50,13 +50,14 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          1
+Release:          2
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
 Source:           https://download.gnome.org/sources/NetworkManager/%{real_version_major}/%{name}-%{version}.tar.xz
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
+Patch1:           fix-wants-and-add-requires.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -474,6 +475,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Wed Dec 15 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-2
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:merge multiple modifications into one patch to fix the dependency problem
+
 * Tue Dec 14 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-1
 - Type:bugfix
 - ID:NA

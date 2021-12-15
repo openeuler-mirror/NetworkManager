@@ -1,0 +1,38 @@
+From 3e79e5f2889bbdec4629e2ea3e3860cfcf9488c4 Mon Sep 17 00:00:00 2001
+From: gaoxingwang <gaoxingwang@huawei.com>
+Date: Wed, 15 Dec 2021 09:54:34 +0800
+Subject: [PATCH] fix wants and add requires
+
+---
+ data/NetworkManager.service.in | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/data/NetworkManager.service.in b/data/NetworkManager.service.in
+index e23b3a5..b29b634 100644
+--- a/data/NetworkManager.service.in
++++ b/data/NetworkManager.service.in
+@@ -1,9 +1,10 @@
+ [Unit]
+ Description=Network Manager
+ Documentation=man:NetworkManager(8)
+-Wants=network.target
+-After=network-pre.target dbus.service
++Wants=network.target dbus.socket
++After=network-pre.target dbus.service dbus.socket
+ Before=network.target @DISTRO_NETWORK_SERVICE@
++Requires=dbus.service
+ 
+ [Service]
+ Type=dbus
+@@ -12,6 +13,8 @@ ExecReload=/usr/bin/busctl call org.freedesktop.NetworkManager /org/freedesktop/
+ #ExecReload=/bin/kill -HUP $MAINPID
+ ExecStart=@sbindir@/NetworkManager --no-daemon
+ Restart=on-failure
++RestartSec=10s
++
+ # NM doesn't want systemd to kill its children for it
+ KillMode=process
+ 
+-- 
+2.27.0
+
