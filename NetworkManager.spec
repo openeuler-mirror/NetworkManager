@@ -10,10 +10,10 @@
 %global obsoletes_ppp_plugin     1:1.5.3
 %global systemd_dir %{_prefix}/lib/systemd/system
 
-%if "x%{?snapshot}" != x
+%if "x%{?snapshot}" != "x"
 %global snapshot_dot .%{snapshot}
 %endif
-%if "x%{?git_sha}" != x
+%if "x%{?git_sha}" != "x"
 %global git_sha_dot .%{git_sha}
 %endif
 
@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          1
+Release:          2
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -475,6 +475,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Tue Jan 11 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-2
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix build error due to upgrading dependency packages
+
 * Sat Dec 18 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-1
 - Type:enhancement
 - ID:NA
