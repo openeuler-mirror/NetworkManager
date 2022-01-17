@@ -39,7 +39,7 @@
 %bcond_without nm_cloud_setup
 
 %global dbus_version 1.1
-%global dbus_sys_dir %{_sysconfdir}/dbus-1/system.d
+%global dbus_sys_dir %{_datadir}/dbus-1/system.d
 %if %{with bluetooth} || %{with wwan}
 %global with_modem_manager_1 1
 %else
@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          3
+Release:          4
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -475,6 +475,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Jan 17 2022 xu_ping <xuping33@huawei.com> - 1.32.12-4
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:Fix D-Bus policy file installed in /usr/share
+
 * Mon Jan 10 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-3
 - Type:bugfix
 - ID:NA
