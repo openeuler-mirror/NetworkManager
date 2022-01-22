@@ -1,4 +1,3 @@
-%global dbus_glib_version 0.100
 %global wireless_tools_version 1:28-0pre9
 %global wpa_supplicant_version 1:1.1
 %global ppp_version %(sed -n 's/^#define\\s*VERSION\\s*"\\([^\\s]*\\)"$/\\1/p' %{_includedir}/pppd/patchlevel.h 2>/dev/null | grep . || echo bad)
@@ -48,7 +47,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          10
+Release:          11
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -61,6 +60,8 @@ Patch2:        bugfix-NetworkManager-restarting-service-on-dependency-failure.pa
 Patch3:        backport-device-fix-wrongly-considering-ipv6-may-fail-for-ipv4.patch
 Patch4:        backport-bugfix-nmcli-field-active-show-error.patch
 Patch5:        backport-amend-edit-translation-of-nmcli.patch
+Patch6:        backport-core-fix-crash-in-nm_wildcard_match_check.patch
+Patch7:        backport-core-ovs-fix-leak-of-NMOvsdbPrivate-db_uuid.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -432,6 +433,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Sat Jan 22 2022 seuzw <930zhaowei@163.com> - 1.26.2-11
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:backport patches to fix crash in nm_wildcard_match_check and fix leak of NMOvsdbPrivate.db_uuid
+
 * Thu Sep 23 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.2-10
 - Type:bugfix
 - ID:NA
