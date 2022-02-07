@@ -1,0 +1,51 @@
+From 2a36f8c2f157299cf8ffb81703b044c49ad9b1fd Mon Sep 17 00:00:00 2001
+From: gaoxingwang <gxw94linux@163.com>
+Date: Mon, 13 Sep 2021 11:00:13 +0800
+Subject: [PATCH] libnm: fix leak and return "failures" from
+ nm_client_load_connections()
+
+Due to this, `nmcli connection load` would also not print a warning
+about failure to load obviously bogus files:
+
+  $ nmcli connection load /bogus
+
+Note that load is also used to unload files, so if the file name is a
+possibly valid name for a non-existing file, there is no failure. For
+example, we get no warning for
+
+  $ nmcli connection load /etc/NetworkManager/system-connections/bogus
+
+Even if currently no such file is loaded, then the operation would still
+silently succeed, instead of succeeding the first time only. That is because
+load should be idempotent.
+
+[thaller@redhat.com: rewrote commit message]
+
+Fixes: 4af6219226e0 ('libnm: implement nm_client_load_connections_async() by using GDBusConnection directly')
+
+https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/issues/794
+
+https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/merge_requests/979
+
+Conflict:apply to libnm/nm-client.c
+Reference:https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/commit/2a36f8c2f157299cf8ffb81703b044c49ad9b1fd
+---
+---
+ libnm/nm-client.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libnm/nm-client.c b/libnm/nm-client.c
+index d7f6115..27c5f39 100644
+--- a/libnm/nm-client.c
++++ b/libnm/nm-client.c
+@@ -5850,7 +5850,7 @@ nm_client_load_connections (NMClient *client,
+ 	g_variant_get (ret,
+ 	               "(b^as)",
+ 	               NULL,
+-	               &failures);
++	               failures);
+ 
+ 	return TRUE;
+ }
+-- 
+2.27.0
