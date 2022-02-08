@@ -47,7 +47,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          2
+Release:          3
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -63,6 +63,7 @@ Patch4:           backport-iwd-Disconnect-signals-in-NMDeviceIwd-s-dispose.patch
 Patch5:           backport-wwan-fix-leaking-bearer-in-connect-ready.patch
 Patch6:           backport-core-fix-crash-in-nm_wildcard_match_check.patch
 Patch7:           backport-core-ovs-fix-leak-of-NMOvsdbPrivate-db_uuid.patch
+Patch8:           backport-libnm-fix-leak-and-return-failures-from-nm-client-load-connections.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -413,6 +414,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Feb 7 2022 chxssg <chxssg@qq.com> - 1.26.2-3
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:libnm: fix leak and return failures from nm_client_load_connections()
+
 * Sat Jan 22 2022 chxssg <chxssg@qq.com> - 1.26.2-2
 - Type:bugfix
 - ID:NA
