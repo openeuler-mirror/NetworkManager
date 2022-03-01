@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          4
+Release:          5
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -475,6 +475,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Sat Feb 26 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-5
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix the issue that NetworkManager service does not slf-heal when the dbus service is abnormal
+
 * Mon Jan 17 2022 xu_ping <xuping33@huawei.com> - 1.32.12-4
 - Type:bugfix
 - ID:NA
