@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          12
+Release:          13
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -64,6 +64,7 @@ Patch5:           backport-amend-edit-translation-of-nmcli.patch
 Patch6:           backport-libnm-fix-leak-and-return-failures-from-nm-client-load-connections.patch
 Patch7:           backport-core-fix-crash-in-nm_wildcard_match_check.patch
 Patch8:           backport-core-ovs-fix-leak-of-NMOvsdbPrivate-db_uuid.patch
+Patch9:           bugfix-use-PartOf-replace-Requires-in-service.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -439,7 +440,13 @@ fi
 %{_datadir}/gtk-doc/html/libnm/*
 %{_datadir}/gtk-doc/html/NetworkManager/*
  
-%changelog 
+%changelog
+* Mon Mar 7 2022 seuzw <930zhaowei@163.com> - 1.26.2-13
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix the issue that NetworkManager service does not self-heal when the dbus service is abnormal
+ 
 * Wed Dec 1 2021 gaoxingwang <gaoxingwang@huawei.com> - 1.26.2-12
 - Type:bugfix
 - ID:NA
