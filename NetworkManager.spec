@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          6
+Release:          7
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -59,6 +59,7 @@ Source1:          NetworkManager.conf
 Source2:          00-server.conf
 Patch1:           fix-wants-and-add-requires.patch
 Patch2:           bugfix-use-PartOf-replace-Requires-in-service.patch
+Patch3:           bugfix-ipv6-external-route-miss.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -476,6 +477,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Mar 7 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-7
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix ipv6 external route miss
+
 * Mon Mar 7 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-6
 - Type:bugfix
 - ID:NA
