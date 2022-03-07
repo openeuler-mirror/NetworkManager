@@ -1,0 +1,25 @@
+From 75e1259d22d10fe05a05c0bda5ce4d5beb5800d5 Mon Sep 17 00:00:00 2001
+From: gaoxingwang <gaoxingwang@huawei.com>
+Date: Sat, 26 Feb 2022 14:59:43 +0800
+Subject: [PATCH] use PartOf replace Requires in service
+
+---
+ data/NetworkManager.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/NetworkManager.service.in b/data/NetworkManager.service.in
+index b29b634..c9a9d88 100644
+--- a/data/NetworkManager.service.in
++++ b/data/NetworkManager.service.in
+@@ -4,7 +4,7 @@ Documentation=man:NetworkManager(8)
+ Wants=network.target dbus.socket
+ After=network-pre.target dbus.service dbus.socket
+ Before=network.target @DISTRO_NETWORK_SERVICE@
+-Requires=dbus.service
++PartOf=dbus.service
+ 
+ [Service]
+ Type=dbus
+-- 
+2.27.0
+
