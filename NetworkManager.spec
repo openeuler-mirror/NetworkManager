@@ -48,7 +48,7 @@
 Name:             NetworkManager
 Version:          1.26.2
 Epoch:            1
-Release:          12
+Release:          13
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -56,14 +56,15 @@ Source:           https://download.gnome.org/sources/NetworkManager/%{real_versi
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
 # PATCH-FEATURE-FIX fix-wants-and-add-requires.patch --fix wants and add requires in the file of NetworkManager.service.in
-Patch1:        fix-wants-and-add-requires.patch
-Patch2:        bugfix-NetworkManager-restarting-service-on-dependency-failure.patch
-Patch3:        backport-device-fix-wrongly-considering-ipv6-may-fail-for-ipv4.patch
-Patch4:        backport-bugfix-nmcli-field-active-show-error.patch
-Patch5:        backport-amend-edit-translation-of-nmcli.patch
-Patch6:        backport-core-fix-crash-in-nm_wildcard_match_check.patch
-Patch7:        backport-core-ovs-fix-leak-of-NMOvsdbPrivate-db_uuid.patch
-Patch8:        backport-libnm-fix-leak-and-return-failures-from-nm-client-load-connections.patch
+Patch1:           fix-wants-and-add-requires.patch
+Patch2:           bugfix-NetworkManager-restarting-service-on-dependency-failure.patch
+Patch3:           backport-device-fix-wrongly-considering-ipv6-may-fail-for-ipv4.patch
+Patch4:           backport-bugfix-nmcli-field-active-show-error.patch
+Patch5:           backport-amend-edit-translation-of-nmcli.patch
+Patch6:           backport-core-fix-crash-in-nm_wildcard_match_check.patch
+Patch7:           backport-core-ovs-fix-leak-of-NMOvsdbPrivate-db_uuid.patch
+Patch8:           backport-libnm-fix-leak-and-return-failures-from-nm-client-load-connections.patch
+Patch9:           bugfix-use-PartOf-replace-Requires-in-service.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -435,6 +436,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Mar 7 2022 seuzw <930zhaowei@163.com> - 1.26.2-13
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix the issue that NetworkManager service does not self-heal when the dbus service is abnormal
+
 * Fri Jan 14 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.26.2-12
 - Type:bugfix
 - ID:NA
