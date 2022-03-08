@@ -1,0 +1,94 @@
+From 386467d16455cc027d1ff9a6ef65d01c172a9f8f Mon Sep 17 00:00:00 2001
+From: gaoxingwang <gaoxingwang@huawei.com>
+Date: Mon, 7 Mar 2022 11:04:17 +0800
+Subject: [PATCH] revert external flag
+
+---
+ src/libnm-platform/nm-platform.c | 44 ++++++++------------------------
+ 1 file changed, 10 insertions(+), 34 deletions(-)
+
+diff --git a/src/libnm-platform/nm-platform.c b/src/libnm-platform/nm-platform.c
+index b7a65df..9b9c194 100644
+--- a/src/libnm-platform/nm-platform.c
++++ b/src/libnm-platform/nm-platform.c
+@@ -4528,20 +4528,6 @@ nm_platform_ip_route_sync(NMPlatform *self,
+ 
+             conf_o = routes->pdata[i];
+ 
+-            if (NMP_OBJECT_CAST_IP_ROUTE(conf_o)->is_external) {
+-                /* This route is added externally. We don't have our own agenda to
+-                 * add it, so skip. */
+-                continue;
+-            }
+-
+-            /* User space cannot add IPv6 routes with metric 0. However, kernel can, and we might track such
+-             * routes in @route as they are present external. As we already skipped external routes above,
+-             * we don't expect a user's choice to add such a route (it won't work anyway). */
+-            nm_assert(
+-                IS_IPv4
+-                || nm_platform_ip6_route_get_effective_metric(NMP_OBJECT_CAST_IP6_ROUTE(conf_o))
+-                       != 0);
+-
+ #define VTABLE_IS_DEVICE_ROUTE(vt, o)                          \
+     (vt->is_ip4 ? (NMP_OBJECT_CAST_IP4_ROUTE(o)->gateway == 0) \
+                 : IN6_IS_ADDR_UNSPECIFIED(&NMP_OBJECT_CAST_IP6_ROUTE(o)->gateway))
+@@ -4558,7 +4544,7 @@ nm_platform_ip_route_sync(NMPlatform *self,
+                 routes_idx = g_hash_table_new((GHashFunc) nmp_object_id_hash,
+                                               (GEqualFunc) nmp_object_id_equal);
+             }
+-            if (!g_hash_table_add(routes_idx, (gpointer) conf_o)) {
++            if (!g_hash_table_insert(routes_idx, (gpointer) conf_o, (gpointer) conf_o)) {
+                 _LOG3D("route-sync: skip adding duplicate route %s",
+                        nmp_object_to_string(conf_o,
+                                             NMP_OBJECT_TO_STRING_PUBLIC,
+@@ -4567,6 +4553,14 @@ nm_platform_ip_route_sync(NMPlatform *self,
+                 continue;
+             }
+ 
++            if (!IS_IPv4
++                && nm_platform_ip6_route_get_effective_metric(NMP_OBJECT_CAST_IP6_ROUTE(conf_o))
++                       == 0) {
++                /* User space cannot add routes with metric 0. However, kernel can, and we might track such
++                 * routes in @route as they are present external. Skip them silently. */
++                continue;
++            }
++
+             plat_entry = nm_platform_lookup_entry(self, NMP_CACHE_ID_TYPE_OBJECT_TYPE, conf_o);
+             if (plat_entry) {
+                 const NMPObject *plat_o;
+@@ -4729,24 +4723,6 @@ sync_route_add:
+     }
+ 
+     if (routes_prune) {
+-        if (routes) {
+-            for (i = 0; i < routes->len; i++) {
+-                conf_o = routes->pdata[i];
+-
+-                if (NMP_OBJECT_CAST_IP_ROUTE(conf_o)->is_external) {
+-                    /* this is only to catch the case where an external route is
+-                     * both in @routes and @routes_prune list. In that case,
+-                     * @routes should win and we should not remove the address. */
+-                    if (!routes_idx) {
+-                        routes_idx = g_hash_table_new((GHashFunc) nmp_object_id_hash,
+-                                                      (GEqualFunc) nmp_object_id_equal);
+-                    }
+-                    g_hash_table_add(routes_idx, (gpointer) conf_o);
+-                    continue;
+-                }
+-            }
+-        }
+-
+         for (i = 0; i < routes_prune->len; i++) {
+             const NMPObject *prune_o;
+ 
+@@ -4757,7 +4733,7 @@ sync_route_add:
+                       || (!NM_IS_IPv4(addr_family)
+                           && NMP_OBJECT_GET_TYPE(prune_o) == NMP_OBJECT_TYPE_IP6_ROUTE));
+ 
+-            if (nm_g_hash_table_lookup(routes_idx, prune_o))
++            if (routes_idx && g_hash_table_lookup(routes_idx, prune_o))
+                 continue;
+ 
+             if (!nm_platform_lookup_entry(self, NMP_CACHE_ID_TYPE_OBJECT_TYPE, prune_o))
+-- 
+2.33.0
