@@ -1,0 +1,25 @@
+From bd0a0eecc71bc255c541605053efd94acceadd3e Mon Sep 17 00:00:00 2001
+From: shirely16 <hanhui_0117@126.com>
+Date: Mon, 14 Mar 2022 14:57:01 +0800
+Subject: [PATCH] recover to 30s timeout in NetworkManager-wait-online service
+
+---
+ data/NetworkManager-wait-online.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/NetworkManager-wait-online.service.in b/data/NetworkManager-wait-online.service.in
+index fda2391..26a8f25 100644
+--- a/data/NetworkManager-wait-online.service.in
++++ b/data/NetworkManager-wait-online.service.in
+@@ -26,7 +26,7 @@ RemainAfterExit=yes
+ # gets delayed too long, then the solution is usually not to decrease
+ # the timeout, but to fix your setup so that the connected state
+ # gets reached earlier.
+-Environment=NM_ONLINE_TIMEOUT=60
++Environment=NM_ONLINE_TIMEOUT=30
+ 
+ [Install]
+ WantedBy=network-online.target
+-- 
+1.8.3.1
+

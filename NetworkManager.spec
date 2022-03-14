@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          7
+Release:          8
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -60,6 +60,7 @@ Source2:          00-server.conf
 Patch1:           fix-wants-and-add-requires.patch
 Patch2:           bugfix-use-PartOf-replace-Requires-in-service.patch
 Patch3:           bugfix-ipv6-external-route-miss.patch
+Patch4:           bugfix-recover-to-30s-timeout-in-NetworkManager-wait-online.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -477,6 +478,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Mar 14 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-8
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:recover to 30s timeout in NetworkManager-wait-online service
+
 * Mon Mar 7 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-7
 - Type:bugfix
 - ID:NA
