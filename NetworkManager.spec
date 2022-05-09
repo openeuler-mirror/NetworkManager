@@ -477,7 +477,7 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
-* Wen Mar 9 2022 chxssg <chxssg@qq.com> - 1.32.12-4
+* Wed Mar 9 2022 chxssg <chxssg@qq.com> - 1.32.12-4
 - Type:bugfix
 - ID:NA
 - SUG:NA
