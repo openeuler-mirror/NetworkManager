@@ -538,7 +538,7 @@ fi
 - SUG:NA
 - DESC:fix use after free
 
-* Sat Oct 29 2021 zhongxuan2 <zhongxuan2@huawei.com> - 1.26.0-9
+* Sat Oct 30 2021 zhongxuan2 <zhongxuan2@huawei.com> - 1.26.0-9
 - Type:bugfix
 - ID:NA
 - SUG:NA
@@ -597,7 +597,7 @@ fi
 - SUG:NA
 - DESC:delete a useless patch
 
-* Fri Jun 22 2020 zhujunhao <zhujunhao8@huawei.com> - 1.20.10-1
+* Mon Jun 22 2020 zhujunhao <zhujunhao8@huawei.com> - 1.20.10-1
 - Type:bugfix
 - ID:NA
 - SUG:NA
