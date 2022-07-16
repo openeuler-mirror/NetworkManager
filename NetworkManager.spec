@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          8
+Release:          9
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -90,12 +90,8 @@ Provides:         %{name}-dispatcher-routing-rules
 Obsoletes:        %{name}-dispatcher-routing-rules
 Provides:         %{name}-config-routing-rules = %{epoch}:%{version}-%{release}
 Obsoletes:        %{name}-config-routing-rules < %{epoch}:%{version}-%{release}
-Provides:         %{name}-ppp
-Provides:         %{name}-wifi
 Provides:         %{name}-team
 Obsoletes:        %{name}-team
-Provides:         %{name}-ovs
-Provides:         %{name}-bluetooth
 Provides:         %{name}-tui
 Obsoletes:        %{name}-tui
 Provides:         %{name}-adsl
@@ -478,6 +474,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Wed Jul 13 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1.32.12-9
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix remove NetworkManager wrongly when yum remove NetworkManager-bluetooth subpackage that is not installed
+
 * Mon Mar 14 2022 gaoxingwang <gaoxingwang@huawei.com> - 1.32.12-8
 - Type:bugfix
 - ID:NA
