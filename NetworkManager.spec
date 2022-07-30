@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          9
+Release:          10
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -61,6 +61,11 @@ Patch1:           fix-wants-and-add-requires.patch
 Patch2:           bugfix-use-PartOf-replace-Requires-in-service.patch
 Patch3:           bugfix-ipv6-external-route-miss.patch
 Patch4:           bugfix-recover-to-30s-timeout-in-NetworkManager-wait-online.patch
+
+Patch6000:        backport-libnm-fix-crash-in-_nm_ip_route_validate_all-for-invalid-route.patch
+Patch6001:        backport-libnm-fix-crash-on-failure-of-nm_vpn_plugin_info_new_from_file.patch
+Patch6002:        backport-core-reload-config-for-active-devices.patch
+Patch6003:        backport-libnm-fix-warning-when-setting-wrong-ethtool-ternary-value.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -474,6 +479,15 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Fri Jul 29 2022 Aichun Li <liaichun@huawei.com> - 1.32.12-10
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:libnm:fix warning when setting wrong ethtool ternary value
+core: reload config for active devices
+libnm: fix crash on failure of nm_vpn_plugin_info_new_from_file()
+libnm: fix crash in _nm_ip_route_validate_all for invalid-route
+
 * Wed Jul 13 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1.32.12-9
 - Type:bugfix
 - ID:NA
