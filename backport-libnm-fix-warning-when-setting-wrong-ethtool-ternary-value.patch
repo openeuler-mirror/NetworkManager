@@ -1,0 +1,36 @@
+From 45f8c78c61e5b42f5b39c354f83109bae3cdcf43 Mon Sep 17 00:00:00 2001
+From: Beniamino Galvani <bgalvani@redhat.com>
+Date: Mon, 20 Dec 2021 07:46:59 +0100
+Subject: [PATCH] libnm: fix warning when setting wrong ethtool ternary value
+
+  $ nmcli connection modify dummy1 ethtool.feature-rx a
+  (process:3077356): GLib-WARNING **: GError set over the top of a previous GError or uninitialized memory.
+  This indicates a bug in someone's code. You must ensure an error is NULL before it's set.
+  The overwriting error message was: 'a' is not valid; use 'on', 'off', or 'ignore'
+  Error: failed to modify ethtool.feature-rx: 'a' is not valid; use [true, yes, on], [false, no, off] or [unknown].
+
+Conflict:NA
+Reference:https://gitlab.freedesktop.org/NetworkManager/NetworkManager/commit/45f8c78c61e5b42f5b39c354f83109bae3cdcf43
+
+Fixes: e5b46aa38ab1 ('cli: use nmc_string_to_ternary() to parse ternary in _set_fcn_ethtool()')
+(cherry picked from commit 25e705c361c5edbf152c5a2570c0038faa4195cf)
+(cherry picked from commit 2aa19708c217f4ae46f939d80c565ca156af7ee3)
+---
+ src/libnmc-setting/nm-meta-setting-desc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libnmc-setting/nm-meta-setting-desc.c b/src/libnmc-setting/nm-meta-setting-desc.c
+index 1cc5f9c15f..1ee9e3077c 100644
+--- a/src/libnmc-setting/nm-meta-setting-desc.c
++++ b/src/libnmc-setting/nm-meta-setting-desc.c
+@@ -4318,7 +4318,7 @@ static gboolean _set_fcn_ethtool(ARGS_SET_FCN)
+     if (!nmc_string_to_ternary_full(value,
+                                     NMC_STRING_TO_TERNARY_FLAGS_IGNORE_FOR_DEFAULT,
+                                     &t,
+-                                    error)) {
++                                    NULL)) {
+         g_set_error(error,
+                     NM_UTILS_ERROR,
+                     NM_UTILS_ERROR_INVALID_ARGUMENT,
+-- 
+2.23.0
