@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          8
+Release:          10
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -479,6 +479,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Aug 1 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1:1.32.12-10
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:fix release version
+
 * Mon Aug 1 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1:1.32.12-8
 - Type:bugfix
 - ID:NA
