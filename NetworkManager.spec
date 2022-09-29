@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          11
+Release:          12
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -306,7 +306,7 @@ intltoolize --automake --copy --force
 	--with-nm-cloud_setup=no
 %endif
 
-make
+%make_build
 
 %install
 make install DESTDIR=%{buildroot}
@@ -485,6 +485,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Sep 29 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1:1.32.12-12
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:use multi-thread build
+
 * Thu Sep 29 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1:1.32.12-11
 - Type:bugfix
 - ID:NA
