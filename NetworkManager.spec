@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          10
+Release:          11
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -385,7 +385,7 @@ fi
 %{systemd_dir}/NetworkManager-wait-online.service
 %{systemd_dir}/NetworkManager-dispatcher.service
 %{_prefix}/lib/udev/rules.d/*.rules
-%{_libdir}/%{name}/%{version}-%{release}/*.so
+%{_libdir}/%{name}/%{version}-%{release}/libnm-settings-plugin-ifcfg-rh.so
 %{_libexecdir}/nm-if*
 %{_libexecdir}/nm-dhcp-helper
 %{_libexecdir}/nm-daemon-helper
@@ -406,9 +406,13 @@ fi
 %{_sysconfdir}/%{name}/dispatcher.d/no-wait.d/10-ifcfg-rh-routes.sh
 %{_sysconfdir}/%{name}/dispatcher.d/pre-up.d/10-ifcfg-rh-routes.sh
 %{_libdir}/pppd/%{ppp_version}/nm-pppd-plugin.so
+%if %{with team}
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-team.so
+%endif
 %{_bindir}/nmtui*
+%if %{with adsl}
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-adsl.so
+%endif
 %if %{with nm_cloud_setup}
 %{_libexecdir}/nm-cloud-setup
 %{systemd_dir}/nm-cloud-setup.service
@@ -419,10 +423,12 @@ fi
 %{_prefix}/lib/firewalld/zones/nm-shared.xml
 %config(noreplace) /etc/ld.so.conf.d/*
 
+%if %{with wwan}
 %files wwan
 %defattr(-,root,root)
 %{_libdir}/%{name}/%{version}-%{release}/libnm-device-plugin-wwan.so
 %{_libdir}/%{name}/%{version}-%{release}/libnm-wwan.so
+%endif
 
 %if %{with bluetooth}
 %files bluetooth
@@ -479,6 +485,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Thu Sep 29 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1:1.32.12-11
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:delete extra so file in main packet
+
 * Fri Jul 29 2022 Aichun Li <liaichun@huawei.com> - 1.32.12-10
 - Type:bugfix
 - ID:NA
