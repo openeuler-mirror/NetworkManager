@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          12
+Release:          13
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -66,6 +66,7 @@ Patch6000:        backport-libnm-fix-crash-in-_nm_ip_route_validate_all-for-inva
 Patch6001:        backport-libnm-fix-crash-on-failure-of-nm_vpn_plugin_info_new_from_file.patch
 Patch6002:        backport-core-reload-config-for-active-devices.patch
 Patch6003:        backport-libnm-fix-warning-when-setting-wrong-ethtool-ternary-value.patch
+Patch6004:        fix-minor-written-mistake.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -485,6 +486,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Tue Nov 15 2022 yuelg <yuelg@chinaunicom.cn> - 1:1.32.12-13
+- Type:bugfix
+- ID:NA
+- SUG:NA
+- DESC:Fix minor written mistake NetworkManaer
+
 * Thu Sep 29 2022 gaoxingwang <gaoxingwang1@huawei.com> - 1:1.32.12-12
 - Type:bugfix
 - ID:NA
