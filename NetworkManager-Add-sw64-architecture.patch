@@ -1,0 +1,28 @@
+From a3e9c5c1e6646c133b7dbd6d996b4f38a44ae0aa Mon Sep 17 00:00:00 2001
+From: wzx <wuzx1226@qq.com>
+Date: Tue, 25 Oct 2022 09:06:08 +0800
+Subject: [PATCH] Add sw64 architecture
+
+Add sw64 architecture parallel to alpha architecture in file missing_fcntl.h to make it possible on sw64 servers.
+
+Signed-off-by: wzx <wuzx1226@qq.com>
+---
+ src/libnm-systemd-shared/src/basic/missing_fcntl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libnm-systemd-shared/src/basic/missing_fcntl.h b/src/libnm-systemd-shared/src/basic/missing_fcntl.h
+index 00937d2..547891c 100644
+--- a/src/libnm-systemd-shared/src/basic/missing_fcntl.h
++++ b/src/libnm-systemd-shared/src/basic/missing_fcntl.h
+@@ -43,7 +43,7 @@
+  */
+ 
+ #ifndef __O_TMPFILE
+-#if defined(__alpha__)
++#if defined(__alpha__) || defined(__sw_64__)
+ #define __O_TMPFILE     0100000000
+ #elif defined(__parisc__) || defined(__hppa__)
+ #define __O_TMPFILE     0400000000
+-- 
+2.33.0
+
