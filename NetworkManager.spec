@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          13
+Release:          14
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://www.gnome.org/projects/NetworkManager/
@@ -332,7 +332,8 @@ cp valgrind.suppressions %{buildroot}%{_prefix}/src/debug/NetworkManager-%{real_
 touch %{buildroot}%{_sbindir}/ifup %{buildroot}%{_sbindir}/ifdown
 
 %check
-make %{?_smp_mflags} check
+#To avoid some test failed which need root permission
+NMTST_FORCE_REAL_ROOT=true %make_build check
 
 %pre
 if [ -f "%{systemd_dir}/network-online.target.wants/NetworkManager-wait-online.service" ] ; then
@@ -486,6 +487,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Tue Dec 6 2022 Chenxi Mao <chenxi.mao@suse.com> - 1:1.32.12-14
+- Type:bugfix
+- CVE:NA
+- SUG:NA
+- DESC: Set NMTST_FORCE_REAL_ROOT to true to skip test which need root user permission
+
 * Mon Oct 24 2022 wuzx<wuzx1226@qq.com> - 1:1.32.12-13
 - Type:feature
 - CVE:NA
