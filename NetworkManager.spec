@@ -50,10 +50,10 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          15
+Release:          16
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
-URL:              https://www.gnome.org/projects/NetworkManager/
+URL:              https://networkmanager.dev/
 Source:           https://download.gnome.org/sources/NetworkManager/%{real_version_major}/%{name}-%{version}.tar.xz
 Source1:          NetworkManager.conf
 Source2:          00-server.conf
@@ -488,6 +488,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Wed Dec 7 2022 chendexi <chendexi@kylinos.cn> - 1:1.32.12-16
+- Type:bugfix
+- CVE:NA
+- SUG:NA
+- DESC:Modify invalid upstream address
+
 * Tue Dec 6 2022 Chenxi Mao <chenxi.mao@suse.com> - 1:1.32.12-15
 - Type:bugfix
 - CVE:NA
