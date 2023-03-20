@@ -50,7 +50,7 @@
 Name:             NetworkManager
 Version:          1.32.12
 Epoch:            1
-Release:          16
+Release:          17
 Summary:          Network Link Manager and User Applications
 License:          GPLv2+
 URL:              https://networkmanager.dev/
@@ -68,6 +68,7 @@ Patch6002:        backport-core-reload-config-for-active-devices.patch
 Patch6003:        backport-libnm-fix-warning-when-setting-wrong-ethtool-ternary-value.patch
 Patch6004:        fix-minor-written-mistake.patch
 Patch6005:        NetworkManager-Add-sw64-architecture.patch
+Patch6006:        delete-lease-file-when-connection-deleted.patch
 
 BuildRequires:    gcc libtool pkgconfig automake autoconf intltool gettext-devel ppp-devel gnutls-devel
 BuildRequires:    dbus-devel dbus-glib-devel  glib2-devel gobject-introspection-devel jansson-devel
@@ -488,6 +489,12 @@ fi
 %{_datadir}/gtk-doc/html/NetworkManager/*
 
 %changelog
+* Mon Mar 20 2023 sunsuwan <sunsuwan3@huawei.com> - 1:1.32.12-17
+- Type:bugfix
+- CVE:NA
+- SUG:NA
+- DESC:delete lease file when connection deleted
+
 * Wed Dec 7 2022 chendexi <chendexi@kylinos.cn> - 1:1.32.12-16
 - Type:bugfix
 - CVE:NA
