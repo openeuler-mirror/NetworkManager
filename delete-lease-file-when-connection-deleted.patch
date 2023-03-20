@@ -1,0 +1,140 @@
+From 1c42631f72215ce02d8571c6d61ffae481744ce3 Mon Sep 17 00:00:00 2001
+From: gaoxingwang <gaoxingwang1@huawei.com>
+Date: Sat, 17 Dec 2022 21:01:26 +0800
+Subject: [PATCH] delete lease file when connection deleted
+Currently, the dhclient-uid-xxx.lease file generated in nmcli add/del mode will
+ not be deleted, which is unreasonable. In this deletion, only the specified
+ lease file is deleted in the nmcli del phase.
+
+Signed-off-by: gaoxingwang <gaoxingwang1@huawei.com>
+Signed-off-by: liaichun <liaichun@huawei.com>
+---
+ src/nmcli/connections.c | 105 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+
+diff --git a/src/nmcli/connections.c b/src/nmcli/connections.c
+index 9f700ca..8f68c02 100644
+--- a/src/nmcli/connections.c
++++ b/src/nmcli/connections.c
+@@ -8989,6 +8989,110 @@ delete_cb(GObject *con, GAsyncResult *result, gpointer user_data)
+     }
+ }
+ 
++static const char *
++_addr_family_to_path_part(int addr_family)
++{
++    nm_assert(NM_IN_SET(addr_family, AF_INET, AF_INET6));
++    return (addr_family == AF_INET6) ? "6" : "";
++}
++
++static gboolean
++nm_dhcp_utils_get_leasefile_path(int addr_family,
++        const char *plugin_name,
++        const char *iface,
++        const char *uuid,
++        char **     out_leasefile_path)
++{
++    gs_free char *rundir_path   = NULL;
++    gs_free char *statedir_path = NULL;
++
++    rundir_path = g_strdup_printf(NMRUNDIR "/%s%s-%s-%s.lease",
++                                  plugin_name,
++                                  _addr_family_to_path_part(addr_family),
++                                  uuid,
++                                  iface);
++
++    if (g_file_test(rundir_path, G_FILE_TEST_EXISTS)) {
++        *out_leasefile_path = g_steal_pointer(&rundir_path);
++        return TRUE;
++    }
++
++    statedir_path = g_strdup_printf(NMSTATEDIR "/%s%s-%s-%s.lease",
++                                    plugin_name,
++                                    _addr_family_to_path_part(addr_family),
++                                    uuid,
++                                    iface);
++
++    if (g_file_test(statedir_path, G_FILE_TEST_EXISTS)) {
++        *out_leasefile_path = g_steal_pointer(&statedir_path);
++        return TRUE;
++    }
++    return FALSE;
++}
++
++static char *
++get_dhclient_leasefile(int addr_family, const char *iface, const char *uuid, char **out_preferred_path)
++{
++    gs_free char *path = NULL;
++
++    if (nm_dhcp_utils_get_leasefile_path(addr_family, "dhclient", iface, uuid, &path)) {
++        NM_SET_OUT(out_preferred_path, g_strdup(path));
++        return g_steal_pointer(&path);
++    }
++
++    NM_SET_OUT(out_preferred_path, g_steal_pointer(&path));
++
++    /* If the leasefile we're looking for doesn't exist yet in the new location
++     * (eg, /var/lib/NetworkManager) then look in old locations to maintain
++     * backwards compatibility with external tools (like dracut) that put
++     * leasefiles there.
++     */
++
++    /* Old Debian, SUSE, and Mandriva location */
++    g_free(path);
++    path = g_strdup_printf(LOCALSTATEDIR "/lib/dhcp/dhclient%s-%s-%s.lease",
++                           _addr_family_to_path_part(addr_family),
++                           uuid,
++                           iface);
++    if (g_file_test(path, G_FILE_TEST_EXISTS))
++        return g_steal_pointer(&path);
++
++    /* Old Red Hat and Fedora location */
++    g_free(path);
++    path = g_strdup_printf(LOCALSTATEDIR "/lib/dhclient/dhclient%s-%s-%s.lease",
++                           _addr_family_to_path_part(addr_family),
++                           uuid,
++                           iface);
++    if (g_file_test(path, G_FILE_TEST_EXISTS))
++        return g_steal_pointer(&path);
++
++    /* Fail */
++    return NULL;
++}
++
++static void
++do_lease_file_delete(NMConnection *connection)
++{
++    gs_free char *ip4_leasefile = NULL;
++    gs_free char *ip6_leasefile = NULL;
++    ip4_leasefile = get_dhclient_leasefile(AF_INET,
++                                           nm_connection_get_id(connection),
++                                           nm_connection_get_uuid(connection),
++                                           NULL);
++
++    ip6_leasefile = get_dhclient_leasefile(AF_INET6,
++                                           nm_connection_get_id(connection),
++                                           nm_connection_get_uuid(connection),
++                                           NULL);
++
++    if (ip4_leasefile) {
++        (void) unlink(ip4_leasefile);
++    }
++    if (ip6_leasefile) {
++        (void) unlink(ip6_leasefile);
++    }
++}
++
+ static void
+ do_connection_delete(const NMCCommand *cmd, NmCli *nmc, int argc, const char *const *argv)
+ {
+@@ -9085,6 +9189,7 @@ do_connection_delete(const NMCCommand *cmd, NmCli *nmc, int argc, const char *co
+                                           info->cancellable,
+                                           delete_cb,
+                                           info);
++        do_lease_file_delete(found_cons->pdata[i]);
+     }
+ 
+ finish:
+-- 
+2.27.0
+
