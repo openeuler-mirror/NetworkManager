@@ -1,0 +1,25 @@
+From 50ffde33c10ad5c536857bcdfcd815b9a25b9de7 Mon Sep 17 00:00:00 2001
+From: desert-sailor <dxwangk@isoftstone.com>
+Date: Thu, 30 Mar 2023 15:24:14 +0800
+Subject: [PATCH] bugfix for incorrect translations
+
+---
+ po/zh_CN.po | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/po/zh_CN.po b/po/zh_CN.po
+index 6df2d6a..de279f8 100644
+--- a/po/zh_CN.po
++++ b/po/zh_CN.po
+@@ -12456,7 +12456,7 @@ msgstr "错误：超时时间 %d 秒已到。"
+ #: ../src/nmcli/devices.c:2076
+ #, c-format
+ msgid "Device '%s' successfully activated with '%s'.\n"
+-msgstr "成功用 \"%s%s\" 激活了设备 \"\"。\n"
++msgstr "设备 \"%s\" 成功以 \"%s\" 激活。\n"
+ 
+ #: ../src/nmcli/devices.c:2082
+ #, c-format
+-- 
+2.33.0
+
